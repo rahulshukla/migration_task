@@ -51,5 +51,6 @@ module.exports = {
      * @const {string}
      */
   csv_file_rath: path.join(__dirname, 'question_ids.csv'),
+  result_csv_file_rath: path.join(__dirname, 'results.csv'),
 
 }

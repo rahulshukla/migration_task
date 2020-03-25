@@ -25,6 +25,7 @@
     "chalk": "^3.0.0",
     "convert-array-to-csv": "^1.0.10",
     "convert-csv-to-array": "^1.0.3",
+    "csv-writer": "^1.6.0",
     "csvsync": "^1.3.2",
     "execution-time": "^1.4.1",
     "fast-csv": "^4.1.3",

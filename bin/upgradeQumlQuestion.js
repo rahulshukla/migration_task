@@ -7,6 +7,7 @@ const axios = require('axios')
 , constants = require( path.join(__dirname, '..', 'constants'))
 
 
+
 function upgradeQumlQuestion (QumlData) {
     let newEditorState = {};
     newEditorState.options = (_.has(QumlData.assessment_item.editorState, 'options')) ? QumlData.assessment_item.editorState.options : QumlData.assessment_item.options;
@@ -58,13 +59,46 @@ function patchQuestionForNewVersion (result,QumlData) {
     }
 
     axios.patch(constants.apiEndpointUrl + '/assessment/v3/items/update/' + QumlData.assessment_item.identifier, requestBody, config).then((result) => {
-        // createCSVFromQuestionData(result.data.result.items)
+        updateReport(QumlData,'upgraded')
         console.log(result)
     })
     .catch((err) => {
+        updateReport(QumlData,'failed')
         log(chalk.red(err))
     })
 
+}
+
+async function updateReport(QumlData, status) {
+    const createCsvWriter = require('csv-writer').createObjectCsvWriter;
+    const csvWriter = createCsvWriter({
+        path: constants.result_csv_file_rath,
+        append: true,
+        header: [
+            {id: 'identifier', title: 'identifier'},
+            {id: 'itemType', title: 'itemType'},
+            {id: 'qumlVersion', title: 'qumlVersion'},
+            {id: 'program', title: 'program'},
+            {id: 'type', title: 'type'},
+            {id: 'objectType', title: 'objectType'},
+            {id: 'board', title: 'board'},
+            {id: 'status', title: 'status'},
+        ]
+    });
+    const resultData = [{
+            identifier: QumlData.assessment_item.identifier,
+            itemType: QumlData.assessment_item.itemType,
+            qumlVersion: QumlData.assessment_item.qumlVersion,
+            program: QumlData.assessment_item.program,
+            type: QumlData.assessment_item.type,
+            objectType: QumlData.assessment_item.objectType,
+            board: QumlData.assessment_item.board,
+            status: status
+    }]
+    csvWriter.writeRecords(resultData)       // returns a promise
+    .then(() => {
+        console.log('...Done');
+    });
 }
 
 exports.upgradeQumlQuestion = upgradeQumlQuestion
