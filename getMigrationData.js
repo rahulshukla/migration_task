@@ -59,7 +59,7 @@ function getOldQumlContent(token) {
             'Content-Type': 'application/json',
             'Accept-Encoding': 'application/gzip',
             'Accept-Charset': 'UTF-8',
-            'Authorization': 'Bearer ' + token
+            'Authorization': 'Bearer '.concat(token)
         }
     }
 

@@ -1,44 +1,78 @@
-// Include async module by absolute module install path.
-var async = require('/usr/local/lib/node_modules/async');
+const batchRequest = require('batch-request-js')
+const constants = require('./constants')
+axios = require('axios')
+qs = require('querystring')
+fs = require('fs')
+util = require('util')
+chalk = require('chalk')
+log = console.log
+var csvsync = require('csvsync');
 
-// Specify how many worker execute taks concurrently in the queue.
-var worker_number = 2;
+function getDataFromCSV() {
+    var csv = fs.readFileSync('./question_ids.csv');
+    var data = csvsync.parse(csv,{skipHeader: false,
+      returnObject: true,});
+    return data
+}
 
-// Create the queue object. The first parameter is a function object.
-// The second parameter is the worker number that execute task at same time.
-var queue = async.queue(function (object,callback) {
+function getAccessToken() {
+  log(chalk.bold.yellow("Getting Access Token"))
+  const requestBody = {
+      client_id: constants.clientId,
+      username: constants.username,
+      password: constants.password,
+      grant_type: constants.grant_type,
+  }
+  const config = {
+      headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+      }
+  }
+  axios.post(constants.authEndpointUrl, qs.stringify(requestBody), config).then((result) => {
+    getCustomers(result.data.access_token);
+      })
+      .catch((err) => {
+          log(err)
+      })
+}
 
-    // Get queue start run time.
-    var date = new Date();
-    var time = date.toTimeString();
+async function getCustomers (access_token) {
+  var row =getDataFromCSV()
+  let customerIds = []
+  row.forEach(function (value) {
+    customerIds.push(value.identifier)
+  });
 
-    // Print task start info.
-    console.log("Start task " + JSON.stringify(object) + " at " + time);
+  const config = {
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '.concat(access_token)
+    }
+}
 
-    // Execute function after object.time timeout.
-    setTimeout(function () {
+  var API_ENDPOINT =  constants.apiEndpointUrl .concat("/assessment/v3/items/read")
 
-        // Get timeout time.
-        date = new Date();
-        time = date.toTimeString();
+  const request = (customerId) => axios.get(`${API_ENDPOINT}/${customerId}`, config).then(response => {
+    // If request is good...
+    // console.log(response.data.result.assessment_item.identifier);
+    console.log(response.data);
+  })
+  .catch((error) => {
+    log(error);
+  });
 
-        // Print task timeout data.
-        console.log("End task " + JSON.stringify(object) + " art " + time);
 
-        callback();
-    },object.time)
-},worker_number)
 
-// Loop to add object in the queue with prefix 1.
-for (var i = 0; i<3; i++) {
-    queue.push({name:"1 - " + i,time:(i+1)*1000},function (err) {
-        console.log(err);
-    })
-};
+  // fetch customers in batches of 100, delaying 200ms inbetween each batch request
+  const {error, data } = await batchRequest(customerIds, request, { batchSize: 50, delay: 200 })
 
-// Loop to add object in the queue with prefix 2.
-for (var i = 0; i<3; i++) {
-    queue.push({name:"2 - " + i,time:(i+1)*1000},function (err) {
-        console.log(err);
-    })
-};
+  // Data from successful requests
+  log(chalk.green(JSON.stringify(data))) // [{ customerId: '100', ... }, ...]
+
+  // Failed requests
+  log(chalk.red(error)) // [{ record: "101", error: [Error: Customer not found] }, ...]
+}
+
+
+// getAccessToken()
+getAccessToken()
