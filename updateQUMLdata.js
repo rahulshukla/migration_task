@@ -6,7 +6,8 @@ fs = require('fs')
 util = require('util')
 chalk = require('chalk')
 log = console.log
-var csvsync = require('csvsync');
+const csvsync = require('csvsync');
+const upgradeUtil  = require('./upgradeQumlQuestion')
 
 function getDataFromCSV() {
     var csv = fs.readFileSync('./question_ids.csv');
@@ -15,7 +16,7 @@ function getDataFromCSV() {
     return data
 }
 
-function getAccessToken() {
+function getQumlQuestions() {
   log(chalk.bold.yellow("Getting Access Token"))
   const requestBody = {
       client_id: constants.clientId,
@@ -29,14 +30,14 @@ function getAccessToken() {
       }
   }
   axios.post(constants.authEndpointUrl, qs.stringify(requestBody), config).then((result) => {
-    getCustomers(result.data.access_token);
+    getQumlInBatch(result.data.access_token);
       })
       .catch((err) => {
           log(err)
       })
 }
 
-async function getCustomers (access_token) {
+async function getQumlInBatch (access_token) {
   var row =getDataFromCSV()
   let customerIds = []
   row.forEach(function (value) {
@@ -53,9 +54,7 @@ async function getCustomers (access_token) {
   var API_ENDPOINT =  constants.apiEndpointUrl .concat("/assessment/v3/items/read")
 
   const request = (customerId) => axios.get(`${API_ENDPOINT}/${customerId}`, config).then(response => {
-    // If request is good...
-    // console.log(response.data.result.assessment_item.identifier);
-    console.log(response.data);
+    upgradeUtil.upgradeQumlQuestion(response.data.result)
   })
   .catch((error) => {
     log(error);
@@ -73,6 +72,4 @@ async function getCustomers (access_token) {
   log(chalk.red(error)) // [{ record: "101", error: [Error: Customer not found] }, ...]
 }
 
-
-// getAccessToken()
-getAccessToken()
+getQumlQuestions()
