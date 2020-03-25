@@ -1,16 +1,16 @@
 const batchRequest = require('batch-request-js')
-const constants = require('./constants')
-axios = require('axios')
-qs = require('querystring')
-fs = require('fs')
-util = require('util')
-chalk = require('chalk')
-log = console.log
-const csvsync = require('csvsync');
-const upgradeUtil  = require('./upgradeQumlQuestion')
+, path = require('path')
+, constants = require( path.join(__dirname, '..', 'constants'))
+, axios = require('axios')
+, qs = require('querystring')
+, fs = require('fs')
+, chalk = require('chalk')
+, log = console.log
+, csvsync = require('csvsync')
+, upgradeUtil  = require(path.join(__dirname,  'upgradeQumlQuestion'))
 
 function getDataFromCSV() {
-    var csv = fs.readFileSync('./question_ids.csv');
+    var csv = fs.readFileSync(constants.csv_file_rath);
     var data = csvsync.parse(csv,{skipHeader: false,
       returnObject: true,});
     return data
@@ -60,16 +60,11 @@ async function getQumlInBatch (access_token) {
     log(error);
   });
 
-
-
-  // fetch customers in batches of 100, delaying 200ms inbetween each batch request
   const {error, data } = await batchRequest(customerIds, request, { batchSize: 50, delay: 200 })
 
-  // Data from successful requests
-  log(chalk.green(JSON.stringify(data))) // [{ customerId: '100', ... }, ...]
+  log(chalk.green(JSON.stringify(data))) 
 
-  // Failed requests
-  log(chalk.red(error)) // [{ record: "101", error: [Error: Customer not found] }, ...]
+  log(chalk.red(error)) 
 }
 
 getQumlQuestions()

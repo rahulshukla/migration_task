@@ -1,5 +1,7 @@
 'use strict'
 
+const path = require('path')
+
 module.exports = {
   /**
    * The const of Authentication end point url.
@@ -42,5 +44,12 @@ module.exports = {
      * @const {string}
      */
   grant_type:'password',
+
+    /**
+     * The csv file path
+     *
+     * @const {string}
+     */
+  csv_file_rath: path.join(__dirname, 'question_ids.csv'),
 
 }

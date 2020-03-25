@@ -1,18 +1,18 @@
 // Get the Auth token based on URL and credentials
-const constants = require('./constants')
+const path = require('path')
+, constants = require( path.join(__dirname, '..', 'constants'))
 , axios = require('axios')
 , qs = require('querystring')
 , perf = require('execution-time')()
-const {
+, {
     convertArrayToCSV
 } = require('convert-array-to-csv')
-fs = require('fs')
-util = require("util")
-chalk = require('chalk')
-log = console.log
+, fs = require('fs')
+, util = require("util")
+, chalk = require('chalk')
+, log = console.log
 
-perf.start();
-
+perf.start(); // Just to measure the performance
 
 function generateContentList() {
     getAccessToken()
@@ -50,7 +50,7 @@ function getOldQumlContent(token) {
         "request": {
             "filters": {
                 "objectType": "AssessmentItem",
-                "qumlVersion": ["1.0"],
+                "qumlVersion": ["0.5"],
                 "type": "mcq"
             }
         }
@@ -88,9 +88,9 @@ function createCSVFromQuestionData(questionData) {
         })
     });
     const csvFromArrayOfObjects = convertArrayToCSV(contentIdArray);
-
+    
     const writeFile = util.promisify(fs.writeFile);
-    writeFile('./question_ids.csv', csvFromArrayOfObjects, 'utf8').then(() => {
+    writeFile(constants.csv_file_rath, csvFromArrayOfObjects, 'utf8').then(() => {
         const results = perf.stop();
         log(chalk.bold.greenBright('File is saved with content ID and ready to process for batch execution'));
         log(chalk.white("Script execution time was " + results.words + " for " + (contentIdArray.length) + " content")); // in milliseconds
