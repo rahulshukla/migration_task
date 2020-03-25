@@ -1,4 +1,4 @@
-// Get the Auth token based on URL and credentials
+'use strict'
 const path = require('path')
 , constants = require( path.join(__dirname, '..', 'constants'))
 , axios = require('axios')

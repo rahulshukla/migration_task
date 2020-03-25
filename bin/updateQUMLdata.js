@@ -1,3 +1,4 @@
+'use strict'
 const batchRequest = require('batch-request-js')
 , path = require('path')
 , constants = require( path.join(__dirname, '..', 'constants'))
@@ -39,9 +40,9 @@ function getQumlQuestions() {
 
 async function getQumlInBatch (access_token) {
   var row =getDataFromCSV()
-  let customerIds = []
+  let qumlIds = []
   row.forEach(function (value) {
-    customerIds.push(value.identifier)
+    qumlIds.push(value.identifier)
   });
 
   const config = {
@@ -53,14 +54,14 @@ async function getQumlInBatch (access_token) {
 
   var API_ENDPOINT =  constants.apiEndpointUrl .concat("/assessment/v3/items/read")
 
-  const request = (customerId) => axios.get(`${API_ENDPOINT}/${customerId}`, config).then(response => {
+  const request = (qumlId) => axios.get(`${API_ENDPOINT}/${qumlId}`, config).then(response => {
     upgradeUtil.upgradeQumlQuestion(response.data.result)
   })
   .catch((error) => {
     log(error);
   });
 
-  const {error, data } = await batchRequest(customerIds, request, { batchSize: 50, delay: 200 })
+  const {error, data } = await batchRequest(qumlIds, request, { batchSize: constants.batch_size, delay: constants.delay_between_request })
 
   log(chalk.green(JSON.stringify(data))) 
 

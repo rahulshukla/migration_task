@@ -1,3 +1,4 @@
+'use strict'
 const axios = require('axios')
 , qs = require('querystring')
 , chalk = require('chalk')
@@ -5,6 +6,7 @@ const axios = require('axios')
 , _ = require('lodash')
 , path = require('path')
 , constants = require( path.join(__dirname, '..', 'constants'))
+, createCsvWriter = require('csv-writer').createObjectCsvWriter;
 
 
 
@@ -14,9 +16,7 @@ function upgradeQumlQuestion (QumlData) {
     newEditorState.question = (_.has(QumlData.assessment_item.editorState, 'question')) ? QumlData.assessment_item.editorState.question : QumlData.assessment_item.question;
     newEditorState.solutions = (_.has(QumlData.assessment_item.editorState, 'solutions')) ? QumlData.assessment_item.editorState.solutions : QumlData.assessment_item.solutions;
     QumlData.assessment_item.editorState = newEditorState
-    // log(((QumlData.assessment_item)))
     getAccessToken(QumlData)
-    // patchQuestionForNewVersion(QumlData)
 }
 
 function getAccessToken(QumlData) {
@@ -58,7 +58,7 @@ function patchQuestionForNewVersion (result,QumlData) {
         }
     }
 
-    axios.patch(constants.apiEndpointUrl + '/assessment/v3/items/update/' + QumlData.assessment_item.identifier, requestBody, config).then((result) => {
+    axios.patch(constants.apiEndpointUrl.concat('/assessment/v3/items/update/').concat(QumlData.assessment_item.identifier) , requestBody, config).then((result) => {
         updateReport(QumlData,'upgraded')
         console.log(result)
     })
@@ -70,10 +70,10 @@ function patchQuestionForNewVersion (result,QumlData) {
 }
 
 async function updateReport(QumlData, status) {
-    const createCsvWriter = require('csv-writer').createObjectCsvWriter;
+   
     const csvWriter = createCsvWriter({
         path: constants.result_csv_file_rath,
-        append: true,
+        append: true, // Below header will not get added if this is true, just to make a template make it false 
         header: [
             {id: 'identifier', title: 'identifier'},
             {id: 'itemType', title: 'itemType'},
@@ -97,7 +97,7 @@ async function updateReport(QumlData, status) {
     }]
     csvWriter.writeRecords(resultData)       // returns a promise
     .then(() => {
-        console.log('...Done');
+        log(chalk.bold.green('Report generated for ' .concat(QumlData.assessment_item.identifier)));
     });
 }
 
