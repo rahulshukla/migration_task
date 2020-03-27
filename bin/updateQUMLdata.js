@@ -50,10 +50,8 @@ async function getQumlInBatch (access_token) {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer '.concat(access_token)
     }
-}
-
-  var API_ENDPOINT =  constants.apiEndpointUrl .concat("/assessment/v3/items/read")
-
+  }
+  const API_ENDPOINT =  constants.apiEndpointUrl .concat("/assessment/v3/items/read")
   const request = (qumlId) => axios.get(`${API_ENDPOINT}/${qumlId}`, config).then(response => {
     upgradeUtil.upgradeQumlQuestion(response.data.result)
   })
@@ -62,10 +60,10 @@ async function getQumlInBatch (access_token) {
   });
 
   const {error, data } = await batchRequest(qumlIds, request, { batchSize: constants.batch_size, delay: constants.delay_between_request })
-
   log(chalk.green(JSON.stringify(data))) 
-
   log(chalk.red(error)) 
 }
 
-getQumlQuestions()
+// getQumlQuestions()
+
+exports.updateQumlQuestion = getQumlQuestions;

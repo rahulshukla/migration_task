@@ -62,7 +62,7 @@ module.exports = {
      *
      * @const {number}
      */
-    batch_size: 10,
+    batch_size: 50,
     /**
      * Time delay between each batch
      *

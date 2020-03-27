@@ -12,7 +12,7 @@ const path = require('path')
 , chalk = require('chalk')
 , log = console.log
 
-perf.start(); // Just to measure the performance
+perf.start(); // Just to measure the script performance
 
 function generateContentList() {
     getAccessToken()
@@ -53,6 +53,7 @@ function getOldQumlContent(token) {
                 "qumlVersion": ["0.5"],
                 "type": "mcq"
             }
+            
         }
     };
     const config = {
