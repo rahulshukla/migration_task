@@ -36,7 +36,9 @@ function upgradeQumlQuestion (QumlData) {
         _.set(QumlData.assessment_item,'responseDeclaration',resDecl)
 
     // Adding response declaration in VSA and SA
-    } else if ( (_.lowerCase(QumlData.assessment_item.category) === "vsa") || (_.lowerCase(QumlData.assessment_item.category) === "sa")){
+    } else if ( (_.lowerCase(QumlData.assessment_item.category) === "vsa") 
+                    || (_.lowerCase(QumlData.assessment_item.category) === "sa")
+                    || (_.lowerCase(QumlData.assessment_item.category) === "la") ) {
         let resDecl =  {
             "responseValue": {
                 "cardinality": "single",

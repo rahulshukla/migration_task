@@ -51,7 +51,7 @@ function getOldQumlContent(token) {
             "filters": {
                 "objectType": "AssessmentItem",
                 "qumlVersion": ["0.5"],
-                "category": ["mcq","sa","vsa"]
+                "category": ["mcq","sa","vsa","la"]
             }
         }
     };
