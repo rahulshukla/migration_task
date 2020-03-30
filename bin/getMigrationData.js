@@ -51,6 +51,7 @@ function getOldQumlContent(token) {
             "filters": {
                 "objectType": "AssessmentItem",
                 "qumlVersion": ["0.5"],
+                "category": ["mcq","sa","vsa"]
             }
         }
     };
@@ -81,6 +82,7 @@ function createCSVFromQuestionData(questionData) {
             qumlVersion: v.qumlVersion,
             program: v.program,
             type: v.type,
+            category: v.category,
             objectType: v.objectType,
             board: v.board,
             status: 'Not started'

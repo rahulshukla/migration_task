@@ -12,21 +12,42 @@ const axios = require('axios')
 
 function upgradeQumlQuestion (QumlData) {
 
-    // log(JSON.stringify(QumlData))
     const options = (_.has(QumlData.assessment_item, 'options')) ? QumlData.assessment_item.options : []
     const question = (_.has(QumlData.assessment_item, 'question')) ? QumlData.assessment_item.question : ''
     const solutions = (_.has(QumlData.assessment_item, 'solutions')) ? QumlData.assessment_item.solutions : []
-    // const objectType = (_.has(QumlData.assessment_item, 'objectType')) ? QumlData.assessment_item.objectType : 'AssessmentItem'
-    // QumlData.assessment_item.objectType = objectType
-    // _.set(QumlData.assessment_item,'objectType',objectType)
 
     let newEditorState = {};
     newEditorState.options = (_.has(QumlData.assessment_item.editorState, 'options')) ? QumlData.assessment_item.editorState.options : options;
     newEditorState.question = (_.has(QumlData.assessment_item.editorState, 'question')) ? QumlData.assessment_item.editorState.question : question;
     newEditorState.solutions = (_.has(QumlData.assessment_item.editorState, 'solutions')) ? QumlData.assessment_item.editorState.solutions : solutions;
-    // _.set(QumlData.assessment_item,'editorState',newEditorState)
     QumlData.assessment_item.editorState = newEditorState
-    // log(JSON.stringify(QumlData))
+
+    // Adding response declaration in MCQ
+    if(_.lowerCase(QumlData.assessment_item.category) === "mcq"){
+        let resDecl =  {
+            "responseValue": {
+                "cardinality": "single",
+                "type": "integer",
+                "correct_response": {
+                    "value": _.findIndex(QumlData.assessment_item.options, {"answer": true})
+                }
+            }
+        }
+        _.set(QumlData.assessment_item,'responseDeclaration',resDecl)
+
+    // Adding response declaration in VSA and SA
+    } else if ( (_.lowerCase(QumlData.assessment_item.category) === "vsa") || (_.lowerCase(QumlData.assessment_item.category) === "sa")){
+        let resDecl =  {
+            "responseValue": {
+                "cardinality": "single",
+                "type": "string",
+                "correct_response": {
+                    "value": _.toString(QumlData.assessment_item.solutions)
+                }
+            }
+        }
+        _.set(QumlData.assessment_item,'responseDeclaration',resDecl)
+    }
     getAccessToken(QumlData)
 }
 
@@ -63,7 +84,7 @@ function patchQuestionForNewVersion (result,QumlData) {
     };
     requestBody.request.assessment_item.metadata = QumlData.assessment_item;
 
-    log(JSON.stringify(requestBody));
+    // log(JSON.stringify(requestBody));
     const config = {
         headers: {
             'Content-Type': 'application/json',
@@ -95,6 +116,7 @@ async function updateReport(QumlData, status) {
             {id: 'qumlVersion', title: 'qumlVersion'},
             {id: 'program', title: 'program'},
             {id: 'type', title: 'type'},
+            {id: 'category', title:'category'},
             {id: 'objectType', title: 'objectType'},
             {id: 'board', title: 'board'},
             {id: 'status', title: 'status'},
