@@ -11,10 +11,20 @@ const axios = require('axios')
 
 
 function upgradeQumlQuestion (QumlData) {
+
+    // log(JSON.stringify(QumlData))
+    const options = (_.has(QumlData.assessment_item, 'options')) ? QumlData.assessment_item.options : []
+    const question = (_.has(QumlData.assessment_item, 'question')) ? QumlData.assessment_item.question : ''
+    const solutions = (_.has(QumlData.assessment_item, 'solutions')) ? QumlData.assessment_item.solutions : []
+    // const objectType = (_.has(QumlData.assessment_item, 'objectType')) ? QumlData.assessment_item.objectType : 'AssessmentItem'
+    // QumlData.assessment_item.objectType = objectType
+    // _.set(QumlData.assessment_item,'objectType',objectType)
+
     let newEditorState = {};
-    newEditorState.options = (_.has(QumlData.assessment_item.editorState, 'options')) ? QumlData.assessment_item.editorState.options : QumlData.assessment_item.options;
-    newEditorState.question = (_.has(QumlData.assessment_item.editorState, 'question')) ? QumlData.assessment_item.editorState.question : QumlData.assessment_item.question;
-    newEditorState.solutions = (_.has(QumlData.assessment_item.editorState, 'solutions')) ? QumlData.assessment_item.editorState.solutions : QumlData.assessment_item.solutions;
+    newEditorState.options = (_.has(QumlData.assessment_item.editorState, 'options')) ? QumlData.assessment_item.editorState.options : options;
+    newEditorState.question = (_.has(QumlData.assessment_item.editorState, 'question')) ? QumlData.assessment_item.editorState.question : question;
+    newEditorState.solutions = (_.has(QumlData.assessment_item.editorState, 'solutions')) ? QumlData.assessment_item.editorState.solutions : solutions;
+    // _.set(QumlData.assessment_item,'editorState',newEditorState)
     QumlData.assessment_item.editorState = newEditorState
     // log(JSON.stringify(QumlData))
     getAccessToken(QumlData)
@@ -42,15 +52,18 @@ function getAccessToken(QumlData) {
 }
 
 function patchQuestionForNewVersion (result,QumlData) {
-
+    const objectType = (_.has(QumlData.assessment_item, 'objectType')) ? QumlData.assessment_item.objectType : 'AssessmentItem'
     let requestBody = {
         "request": {
             "assessment_item": {
+                "objectType": objectType,
+                "metadata": {}
             }
         }
     };
-    requestBody.request.assessment_item = QumlData.assessment_item;
+    requestBody.request.assessment_item.metadata = QumlData.assessment_item;
 
+    log(JSON.stringify(requestBody));
     const config = {
         headers: {
             'Content-Type': 'application/json',
@@ -61,7 +74,7 @@ function patchQuestionForNewVersion (result,QumlData) {
 
     axios.patch(constants.apiEndpointUrl.concat('/assessment/v3/items/update/').concat(QumlData.assessment_item.identifier) , requestBody, config).then((result) => {
         updateReport(QumlData,'upgraded')
-        console.log(result)
+        // console.log(result)
         // log(QumlData)
     })
     .catch((err) => {

@@ -51,9 +51,7 @@ function getOldQumlContent(token) {
             "filters": {
                 "objectType": "AssessmentItem",
                 "qumlVersion": ["0.5"],
-                "type": "mcq"
             }
-            
         }
     };
     const config = {
