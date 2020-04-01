@@ -16,14 +16,24 @@ function upgradeQumlQuestion (QumlData) {
     const question = (_.has(QumlData.assessment_item, 'question')) ? QumlData.assessment_item.question : ''
     const solutions = (_.has(QumlData.assessment_item, 'solutions')) ? QumlData.assessment_item.solutions : []
 
+    const answer = _.toString(solutions)
+
     let newEditorState = {};
-    newEditorState.options = (_.has(QumlData.assessment_item.editorState, 'options')) ? QumlData.assessment_item.editorState.options : options;
+    if(_.lowerCase(QumlData.assessment_item.category) === "mcq") {
+
+        newEditorState.options = (_.has(QumlData.assessment_item.editorState, 'options')) ? QumlData.assessment_item.editorState.options : options;
+    } else if ( (_.lowerCase(QumlData.assessment_item.category) === "vsa") 
+    || (_.lowerCase(QumlData.assessment_item.category) === "sa")
+    || (_.lowerCase(QumlData.assessment_item.category) === "la") ) { 
+        newEditorState.answer = answer
+    }
+
     newEditorState.question = (_.has(QumlData.assessment_item.editorState, 'question')) ? QumlData.assessment_item.editorState.question : question;
     newEditorState.solutions = (_.has(QumlData.assessment_item.editorState, 'solutions')) ? QumlData.assessment_item.editorState.solutions : solutions;
     QumlData.assessment_item.editorState = newEditorState
 
     // Adding response declaration in MCQ
-    if(_.lowerCase(QumlData.assessment_item.category) === "mcq"){
+    if(_.lowerCase(QumlData.assessment_item.category) === "mcq") {
         let resDecl =  {
             "responseValue": {
                 "cardinality": "single",
@@ -50,6 +60,7 @@ function upgradeQumlQuestion (QumlData) {
         }
         _.set(QumlData.assessment_item,'responseDeclaration',resDecl)
     }
+    // log(JSON.stringify(QumlData))
     getAccessToken(QumlData)
 }
 
