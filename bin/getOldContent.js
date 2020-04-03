@@ -11,6 +11,7 @@ const path = require('path')
 , util = require("util")
 , chalk = require('chalk')
 , log = console.log
+, _ = require('lodash')
 
 perf.start(); // Just to measure the script performance
 
@@ -47,13 +48,18 @@ function setAccessToken(response) {
 function getOldQumlContent(token) {
     log(chalk.bold.yellow("Searching for QUML version 0.5 content"))
     const requestBody = {
-        "request": {
-            "filters": {
-                "objectType": "AssessmentItem",
-                "qumlVersion": ["0.5"],
-                "category": ["mcq","sa","vsa","la"]
-            }
-        }
+            "request": {
+              "exists": "questions",
+              "filters": {
+                "contentType": "PracticeQuestionSet",
+                "medium": "English",
+                "objectType": "Content"
+              },
+              "not_exists": "itemSets",
+              "sort_by": {
+                "createdOn": "desc"
+              }
+            } 
     };
     const config = {
         headers: {
@@ -65,7 +71,8 @@ function getOldQumlContent(token) {
     }
 
     axios.post(constants.apiEndpointUrl + '/composite/v3/search', requestBody, config).then((result) => {
-            createCSVFromQuestionData(result.data.result.items)
+            // log(result.data.result.content)
+            createCSVFromQuestionData(result.data.result.content)
         })
         .catch((err) => {
             log(chalk.red(err))
@@ -78,24 +85,28 @@ function createCSVFromQuestionData(questionData) {
     questionData.forEach(function(v) {
         contentIdArray.push({
             identifier: v.identifier,
-            itemType: v.itemType,
-            qumlVersion: v.qumlVersion,
+            questions:_.join(v.questions),
             program: v.program,
-            type: v.type,
-            category: v.category,
             objectType: v.objectType,
-            board: v.board,
-            status: 'Not started'
+            status: v.status,
+            resourceType: v.resourceType,
+            node_id: v.node_id,
+            author: v.author,
+            name:v.name,
+            language:_.join(v.language),
+            status:v.status,
+            versionKey:v.versionKey
         })
     });
     const csvFromArrayOfObjects = convertArrayToCSV(contentIdArray);
     
     const writeFile = util.promisify(fs.writeFile);
-    writeFile(constants.csv_file_rath, csvFromArrayOfObjects, 'utf8').then(() => {
+    writeFile(constants.content_csv_file_rath, csvFromArrayOfObjects, 'utf8').then(() => {
         const results = perf.stop();
         log(chalk.bold.greenBright('File is saved with content ID and ready to process for batch execution'));
         log(chalk.white("Script execution time was " + results.words + " for " + (contentIdArray.length) + " content")); // in milliseconds
     }).catch(error => log(chalk.red('Some error occurred - file either not saved or corrupted file saved.' + error)));;
 }
 
+// generateContentList()
 exports.generateContentList = generateContentList;

@@ -8,10 +8,11 @@ const batchRequest = require('batch-request-js')
 , chalk = require('chalk')
 , log = console.log
 , csvsync = require('csvsync')
+, _ = require('lodash')
 , upgradeUtil  = require(path.join(__dirname,  'upgradeQumlQuestion'))
 
 function getDataFromCSV() {
-    var csv = fs.readFileSync(constants.csv_file_rath);
+    var csv = fs.readFileSync(constants.content_csv_file_rath);
     var data = csvsync.parse(csv,{skipHeader: false,
       returnObject: true,});
     return data
@@ -42,9 +43,9 @@ async function getQumlInBatch (access_token) {
   var row =getDataFromCSV()
   let qumlIds = []
   row.forEach(function (value) {
-    qumlIds.push(value.identifier)
+    qumlIds.push(_.split(value.questions,','))
   });
-
+  qumlIds = _.uniq(_.flatten(qumlIds))
   const config = {
     headers: {
         'Content-Type': 'application/json',

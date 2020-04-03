@@ -9,14 +9,15 @@ const axios = require('axios')
 , createCsvWriter = require('csv-writer').createObjectCsvWriter;
 
 
-
 function upgradeQumlQuestion (QumlData) {
+
+    if(QumlData.assessment_item.qumlVersion == 0.5){
 
     const options = (_.has(QumlData.assessment_item, 'options')) ? QumlData.assessment_item.options : []
     const question = (_.has(QumlData.assessment_item, 'question')) ? QumlData.assessment_item.question : ''
     const solutions = (_.has(QumlData.assessment_item, 'solutions')) ? QumlData.assessment_item.solutions : []
 
-    const answer = _.toString(solutions)
+    const answer = _.toString(solutions) // for VAS , SA and LA question 
 
     let newEditorState = {};
     if(_.lowerCase(QumlData.assessment_item.category) === "mcq") {
@@ -31,15 +32,15 @@ function upgradeQumlQuestion (QumlData) {
     newEditorState.question = (_.has(QumlData.assessment_item.editorState, 'question')) ? QumlData.assessment_item.editorState.question : question;
     newEditorState.solutions = (_.has(QumlData.assessment_item.editorState, 'solutions')) ? QumlData.assessment_item.editorState.solutions : solutions;
     QumlData.assessment_item.editorState = newEditorState
-
+    
     // Adding response declaration in MCQ
-    if(_.lowerCase(QumlData.assessment_item.category) === "mcq") {
+    if(_.lowerCase(QumlData.assessment_item.category) === "mcq")  {
         let resDecl =  {
             "responseValue": {
                 "cardinality": "single",
                 "type": "integer",
                 "correct_response": {
-                    "value": _.findIndex(QumlData.assessment_item.options, {"answer": true})
+                    "value": '"'+_.findIndex(QumlData.assessment_item.options, {"answer": true}) + '"'
                 }
             }
         }
@@ -54,14 +55,17 @@ function upgradeQumlQuestion (QumlData) {
                 "cardinality": "single",
                 "type": "string",
                 "correct_response": {
-                    "value": _.toString(QumlData.assessment_item.solutions)
+                    "value":  '"'+ _.toString(QumlData.assessment_item.solutions) + '"'
                 }
             }
         }
         _.set(QumlData.assessment_item,'responseDeclaration',resDecl)
     }
+
+
     // log(JSON.stringify(QumlData))
     getAccessToken(QumlData)
+    }
 }
 
 function getAccessToken(QumlData) {
@@ -105,6 +109,9 @@ function patchQuestionForNewVersion (result,QumlData) {
             'Authorization': 'Bearer '.concat(result.data.access_token)
         }
     }
+
+    // log(JSON.stringify(requestBody))
+    // log("-----------------------------------------------")
 
     axios.patch(constants.apiEndpointUrl.concat('/assessment/v3/items/update/').concat(QumlData.assessment_item.identifier) , requestBody, config).then((result) => {
         updateReport(QumlData,'upgraded')
