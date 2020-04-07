@@ -9,12 +9,12 @@ const constant  = require(path.join(__dirname,  './constants'))
 // generateList.generateContentList();
 
 // fetch QUML version 0.5 version question attached to content and upgrade to QUML 1.0
-// upgradeQumlQuestion.updateQumlQuestion();
+upgradeQumlQuestion.updateQumlQuestion();
 
 // create Itemset from items/question 
 // update content with itemset
 // publish content if status is live
-// publishContent.publishContent();
+publishContent.publishContent();
 
 console.log(constant.apiEndpointUrl);
 
