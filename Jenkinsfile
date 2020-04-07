@@ -43,6 +43,13 @@ node() {
                         npm run migration
                     """
                 }
+                stage('ArchiveArtifacts') {
+                    sh """
+                        mkdir reports-artifacts
+                        cp *.csv  reports-artifacts
+                        zip -j  reports-artifacts.zip:${artifact_version}  reports-artifacts/*                      
+                    """
+                }
             }
         }
     }
