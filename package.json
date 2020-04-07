@@ -1,11 +1,11 @@
 {
   "name": "content_migration_task",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Content migration for QUML version 0.5 to 1.0",
   "main": "index.js",
   "scripts": {
     "test": "test",
-    "migration" : "node index.js"
+    "migration": "node index.js"
   },
   "repository": {
     "type": "git",
