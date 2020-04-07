@@ -1,6 +1,6 @@
 {
   "name": "content_migration_task",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Content migration for QUML version 0.5 to 1.0",
   "main": "index.js",
   "scripts": {
