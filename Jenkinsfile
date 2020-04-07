@@ -40,6 +40,7 @@ node() {
                         node -v
                         npm -v                        
                         npm install
+                        npm run migration
                     """
                 }
                 stage('ArchiveArtifacts') {

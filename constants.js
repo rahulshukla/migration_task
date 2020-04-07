@@ -56,17 +56,17 @@ module.exports = {
      *
      * @const {string}
      */
-    result_csv_file_rath: path.join(__dirname, 'results.csv'),
+    result_csv_file_rath: path.join(__dirname, 'reports', 'results.csv'),
     /**
      * The output csv file path
      *
      * @const {string}
      */
-    content_csv_file_rath: path.join(__dirname, 'contents.csv'),
+    content_csv_file_rath: path.join(__dirname, 'reports', 'contents.csv'),
 
-    publish_result_csv_file_rath: path.join(__dirname, 'publish_content.csv'),
+    publish_result_csv_file_rath: path.join(__dirname, 'reports', 'publish_content.csv'),
 
-    failed_itemset_to_content_result_csv_file_rath: path.join(__dirname, 'failed_itemset_to_content.csv'),
+    failed_itemset_to_content_result_csv_file_rath: path.join(__dirname, 'reports', 'failed_itemset_to_content.csv'),
     /**
      * batch size for API request , it executes no of API request concurrently
      *
