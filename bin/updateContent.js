@@ -62,9 +62,10 @@ function updateContentWithItemSet(contentIdentifier, itemSetIdentifier, contentS
         }
       }
 
-      log(JSON.stringify(reqBody))
+    //   log(JSON.stringify(reqBody))
 
-    axios.patch(constants.apiEndpointUrl.concat('/content/v3/update/').concat(contentIdentifier) , requestBody, config).then((result) => {
+    axios.patch(constants.apiEndpointUrl.concat('/content/v3/update/').concat(contentIdentifier) , requestBody, config)
+    .then((result) => {
         if( (_.lowerCase(contentStatus)) === 'live' ) {
             contentPublish(access_token, contentIdentifier, itemSetIdentifier, contentStatus, versionKey)
         }

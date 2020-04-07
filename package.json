@@ -4,7 +4,8 @@
   "description": "Content migration for QUML version 0.5 to 1.0",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "migration" : "node index.js"
   },
   "repository": {
     "type": "git",
