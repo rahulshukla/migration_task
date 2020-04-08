@@ -35,10 +35,14 @@ node() {
 
                 stage('Build') {
                     sh """
-                        pwd
                         docker stop migration_container || true && docker rm migration_container || true
-                        docker run --name migration_container -v /var/lib/jenkins/workspace/Build/Core/QUML_Migration:/var/migration_task node npm install /var/migration_task/ && npm run migration /var/migration_task/
+                        docker run --name migration_container -w /migration_task node
                         id=\$(docker ps -aqf "name=migration_container")
+                        echo "id is" + \${id}
+                        docker cp migration_task/  \${id}:/migration_task/
+                        docker exec \${id} npm install /migration_task
+                        docker exec \${id} npm run migration /migration_task
+                        docker cp \${id}:/migration_task/reports/*.csv  migration_task/reports/
                         docker rm \${id}
                     """
                 }
