@@ -35,11 +35,13 @@ node() {
 
                 stage('Build') {
                     sh """
-                        docker run --name migration_container -w /migration_task --env version_number=\${branch_name} --env build_number=\${commit_hash} node
-                        docker cp migration_task/  migration_container:/migration_task/
-                        docker run migration_container npm install /migration_task && npm run migration /migration_task
-                        docker cp migration_container:/migration_task/reports/*.csv  migration_task/reports/
-                        docker rm migration_container
+                        docker run --name migration_container -w /migration_task node
+                        id=\$(docker ps -aqf "name=migration_container")
+                        echo "id is" + \${id}
+                        docker cp migration_task/  \${id}:/migration_task/
+                        docker run \${id} npm install /migration_task && npm run migration /migration_task
+                        docker cp \${id}:/migration_task/reports/*.csv  migration_task/reports/
+                        docker rm \${id}
                     """
                 }
                 // stage('ArchiveArtifacts') {
