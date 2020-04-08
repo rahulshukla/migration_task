@@ -9,7 +9,7 @@ const batchRequest = require('batch-request-js')
 , log = console.log
 , csvsync = require('csvsync')
 , _ = require('lodash')
-, uuidv4 = require('uuid/v4')
+, { v4: uuidv4 } = require('uuid');
 , updateContent  = require(path.join(__dirname,  'updateContent'))
 
 function getDataFromCSV() {

@@ -41,7 +41,7 @@ node() {
                         docker cp migration_task/  \${id}:.
                         docker exec \${id} npm install /migration_task
                         docker exec \${id} npm run migration /migration_task
-                        docker cp \${id}:/migration_task/reports/*.csv  migration_task/reports/
+                        docker cp \${id}:/reports/*.csv  migration_task/reports/
                         docker rm --force \${id}
                     """
                 }
