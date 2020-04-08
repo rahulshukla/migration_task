@@ -51,7 +51,7 @@ node() {
                 }
                 stage('ArchiveArtifacts') {
                     sh """
-                        zip -j  reports-artifacts.zip:${artifact_version}  migration_task/generatedReports/*
+                        zip -j  reports-artifacts_${artifact_version}.zip  migration_task/generatedReports/*
                     """
                     archiveArtifacts "reports-artifacts_${artifact_version}.zip"
                     currentBuild.description = "${branch_name}_${commit_hash}"
