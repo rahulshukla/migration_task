@@ -36,7 +36,7 @@ node() {
                 stage('Build') {
                     sh """
                         docker stop migration_container || true && docker rm migration_container || true
-                        docker run --name migration_container -w /migration_task mhart/alpine-node
+                        docker run --name migration_container -w /migration_task node
                         id=\$(docker ps -aqf "name=migration_container")
                         echo "id is" + \${id}
                         docker cp migration_task/  \${id}:/migration_task/
