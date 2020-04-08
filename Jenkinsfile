@@ -36,7 +36,7 @@ node() {
 
                 }
 
-                stage('Build') {
+                stage('Run Migration Script') {
                     sh """
                         docker stop --force migration_container || true && docker rm --force migration_container || true
                         docker run --name migration_container -d -w /migration_task node sleep infinity
