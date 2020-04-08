@@ -37,7 +37,7 @@ node() {
                     sh """
                         pwd
                         docker stop migration_container || true && docker rm migration_container || true
-                        docker run --name migration_container -v /var/lib/jenkins/workspace/Build/Core/QUML_Migration:/var/migration_task node npm install /var/migration_task/QUML_Migration && npm run migration /var/migration_task/QUML_Migration
+                        docker run --name migration_container -v /var/lib/jenkins/workspace/Build/Core/QUML_Migration:/var/migration_task node npm install /var/migration_task/ && npm run migration /var/migration_task/
                         id=\$(docker ps -aqf "name=migration_container")
                         docker rm \${id}
                     """
