@@ -35,7 +35,7 @@ node() {
 
                 stage('Build') {
                     sh """
-                        docker stop migration_container || true && docker rm migration_container || true
+                        docker stop --force migration_container || true && docker rm --force migration_container || true
                         docker run --name migration_container -d -w /migration_task node sleep infinity
                         id=\$(docker ps -aqf "name=migration_container")
                         docker cp migration_task/  \${id}:.
