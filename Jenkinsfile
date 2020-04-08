@@ -35,13 +35,10 @@ node() {
 
                 stage('Build') {
                     sh """
+                        pwd
                         docker stop migration_container || true && docker rm migration_container || true
-                        docker run --name migration_container -w /migration_task node
+                        docker run --name migration_container -v migration_task:/migration_task -w /migration_task node npm install /migration_task && npm run migration /migration_task
                         id=\$(docker ps -aqf "name=migration_container")
-                        echo "id is" + \${id}
-                        docker cp migration_task/  \${id}:/migration_task/
-                        docker start \${id} npm install /migration_task && npm run migration /migration_task
-                        docker cp \${id}:/migration_task/reports/*.csv  migration_task/reports/
                         docker rm \${id}
                     """
                 }
