@@ -41,14 +41,14 @@ node() {
                         docker cp migration_task/  \${id}:.
                         docker exec \${id} npm install /migration_task
                         docker exec \${id} npm run migration /migration_task
-                        docker cp \${id}:/reports/  migration_task/reports/
+                        docker cp \${id}:/migration_task/reports/  migration_task/generatedReports/
                         docker rm --force \${id}
                     """
                 }
                 stage('ArchiveArtifacts') {
                     sh """
                         mkdir reports-artifacts
-                        cp migration_task/reports/  reports-artifacts
+                        cp migration_task/generatedReports/  reports-artifacts
                         zip -j  reports-artifacts.zip:${artifact_version}  reports-artifacts/*
                     """
                     archiveArtifacts "reports-artifacts.zip:${artifact_version}"
