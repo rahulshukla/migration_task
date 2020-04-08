@@ -51,8 +51,8 @@ node() {
                 }
                 stage('ArchiveArtifacts') {
                     sh """
-                        ls /var/lib/jenkins/workspace/Build/Core/migration_QUML_task_CF/migration_task/generatedReports
-                        zip -j  reports-artifacts_${artifact_version}.zip  migration_task/generatedReports/*
+                        ls /var/lib/jenkins/workspace/Build/Core/migration_QUML_task_CF/migration_task/generatedReports/reports
+                        #zip -j  reports-artifacts_${artifact_version}.zip  migration_task/generatedReports/*
                     """
                     archiveArtifacts "reports-artifacts_${artifact_version}.zip"
                     currentBuild.description = "${branch_name}_${commit_hash}"
