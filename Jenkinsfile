@@ -7,7 +7,7 @@ node() {
         String ANSI_YELLOW = "\u001B[33m"
 
         ansiColor('xterm') {
-            stages {
+           
                 stage('Checkout') {
                     cleanWs()
                     if (params.github_release_tag == "") {
@@ -58,7 +58,7 @@ node() {
                     archiveArtifacts "reports-artifacts_${artifact_version}.zip"
                     currentBuild.description = "${branch_name}_${commit_hash}"
                 }
-            }
+            
         }
     }
     catch (err) {
