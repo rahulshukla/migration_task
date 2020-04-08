@@ -36,14 +36,13 @@ node() {
                 stage('Build') {
                     sh """
                         docker stop migration_container || true && docker rm migration_container || true
-                        docker run -rm --name migration_container -w /migration_task node tail -f /dev/null
+                        docker run --name migration_container -w /migration_task node:12 sleep infinity
                         id=\$(docker ps -aqf "name=migration_container")
-                        echo "id is" + \${id}
                         docker cp migration_task/  \${id}:/migration_task/
                         docker exec \${id} npm install /migration_task
                         docker exec \${id} npm run migration /migration_task
                         docker cp \${id}:/migration_task/reports/*.csv  migration_task/reports/
-                        docker rm \${id}
+                        docker rm --force \${id}
                     """
                 }
                 // stage('ArchiveArtifacts') {
