@@ -8,7 +8,7 @@ node() {
 
         ansiColor('xterm') {
            
-                stage('Checkout') {
+                stage('Checkout Project') {
                     cleanWs()
                     if (params.github_release_tag == "") {
                         checkout scm
@@ -49,7 +49,7 @@ node() {
                         docker rm --force \${id}
                     """
                 }
-                stage('ArchiveArtifacts') {
+                stage('Generate Reports') {
                     sh """
                         zip -j  reports-artifacts_${artifact_version}.zip  migration_task/generatedReports/reports/*
                     """
