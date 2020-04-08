@@ -41,19 +41,19 @@ node() {
                         docker cp migration_task/  \${id}:.
                         docker exec \${id} npm install /migration_task
                         docker exec \${id} npm run migration /migration_task
-                        docker cp \${id}:/reports/*.csv  migration_task/reports/
+                        docker cp \${id}:/reports/  migration_task/reports/
                         docker rm --force \${id}
                     """
                 }
-                // stage('ArchiveArtifacts') {
-                //     sh """
-                //         mkdir reports-artifacts
-                //         cp migration_task/reports/*.csv  reports-artifacts
-                //         zip -j  reports-artifacts.zip:${artifact_version}  reports-artifacts/*
-                //     """
-                //     archiveArtifacts "reports-artifacts.zip:${artifact_version}"
-                //     currentBuild.description = "${branch_name}_${commit_hash}"
-                // }
+                stage('ArchiveArtifacts') {
+                    sh """
+                        mkdir reports-artifacts
+                        cp migration_task/reports/  reports-artifacts
+                        zip -j  reports-artifacts.zip:${artifact_version}  reports-artifacts/*
+                    """
+                    archiveArtifacts "reports-artifacts.zip:${artifact_version}"
+                    currentBuild.description = "${branch_name}_${commit_hash}"
+                }
             }
         }
     }
