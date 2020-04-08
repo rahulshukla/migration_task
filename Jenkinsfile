@@ -48,7 +48,7 @@ node() {
                 stage('ArchiveArtifacts') {
                     sh """
                         mkdir reports-artifacts
-                        cp migration_task/generatedReports/  reports-artifacts
+                        cp migration_task/generatedReports/*.*  reports-artifacts
                         zip -j  reports-artifacts.zip:${artifact_version}  reports-artifacts/*
                     """
                     archiveArtifacts "reports-artifacts.zip:${artifact_version}"
