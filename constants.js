@@ -9,13 +9,13 @@ module.exports = {
      * @const {string}
      */
     authEndpointUrl: 'https://dev.sunbirded.org/auth/realms/sunbird/protocol/openid-connect/token',
-
     /**
      * The const of API end point URL
      *
      * @const {string}
+     * @example https://dev.sunbirded.org/action
      */
-    apiEndpointUrl: 'https://dev.sunbirded.org/action',
+    apiEndpointUrl: process.env['API_END_POINT_API'],
 
     /**
      * The const of client ID
@@ -52,7 +52,7 @@ module.exports = {
      */
     csv_file_rath: path.join(__dirname, 'question_ids.csv'),
     /**
-     * The output csv file path
+     * Final report of migration output csv file path
      *
      * @const {string}
      */
