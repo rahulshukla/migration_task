@@ -44,7 +44,7 @@ node() {
                         docker cp migration_task/  \${id}:.
                         docker exec \${id} npm install /migration_task
                         docker exec \${id} npm run migration /migration_task
-                        mkdir /var/lib/jenkins/workspace/Build/Core/migration_QUML_task_CF/migration_task/generatedReports
+                        mkdir -p migration_task/generatedReports
                         docker cp \${id}:/migration_task/reports/  migration_task/generatedReports/
                         docker rm --force \${id}
                     """
