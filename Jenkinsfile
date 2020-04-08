@@ -35,7 +35,8 @@ node() {
 
                 stage('Build') {
                     sh """
-                        id=\$(docker run -w /work --env version_number=\${branch_name} --env build_number=\${commit_hash} node)
+                        id=\$(docker run -w /migration_task --env version_number=\${branch_name} --env build_number=\${commit_hash} node)
+                        echo "docker id is: ${id} : \${id}"
                         docker cp migration_task/  \${id}:/migration_task/
                         docker run \${id} npm install /migration_task && npm run migration /migration_task
                         docker cp \${id}:/migration_task/reports/*.csv  migration_task/reports/
