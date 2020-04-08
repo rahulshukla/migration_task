@@ -40,6 +40,7 @@ node() {
                         id=\$(docker ps -aqf "name=migration_container")
                         echo "id is" + \${id}
                         docker cp migration_task/  \${id}:/migration_task/
+                        docker start \${id}
                         docker exec \${id} npm install /migration_task
                         docker exec \${id} npm run migration /migration_task
                         docker cp \${id}:/migration_task/reports/*.csv  migration_task/reports/
