@@ -35,18 +35,17 @@ node() {
 
                 stage('Build') {
                     sh """
-                        export version_number=${branch_name}
-                        export build_number=${commit_hash}
-                        node -v
-                        npm -v                        
-                        npm install
-                        npm run migration
+                        id=$(docker run -w /work --env version_number=${branch_name} --env build_number=${commit_hash} node)
+                        docker cp migration_task/* $id:/migration_task/
+                        docker run $id npm install && npm run migration
+                        docker cp $id:/migration_task/reports/*.csv reports/
+                        docker rm $id
                     """
                 }
                 stage('ArchiveArtifacts') {
                     sh """
                         mkdir reports-artifacts
-                        cp *.csv  reports-artifacts
+                        cp reports/*.csv  reports-artifacts
                         zip -j  reports-artifacts.zip:${artifact_version}  reports-artifacts/*
                     """
                     archiveArtifacts "reports-artifacts.zip:${artifact_version}"
