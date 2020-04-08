@@ -52,7 +52,7 @@ node() {
                 stage('ArchiveArtifacts') {
                     sh """
                         mkdir reports-artifacts
-                        cp /var/lib/jenkins/workspace/Build/Core/migration_QUML_task_CF/migration_task/generatedReports/*.*  reports-artifacts
+                        cp /var/lib/jenkins/workspace/Build/Core/migration_QUML_task_CF/migration_task/generatedReports  reports-artifacts
                         cd /var/lib/jenkins/workspace/Build/Core/migration_QUML_task_CF/migration_task/
                         zip -j  reports-artifacts.zip:${artifact_version}  reports-artifacts/*
                     """
