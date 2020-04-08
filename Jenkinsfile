@@ -34,13 +34,13 @@ node() {
                 echo "artifact_version: " + artifact_version
 
                 stage('Build') {
-                    sh """
+                    sh '''
                         id=$(docker run -w /work --env version_number=${branch_name} --env build_number=${commit_hash} node)
                         docker cp migration_task/* $id:/migration_task/
                         docker run $id npm install && npm run migration
                         docker cp $id:/migration_task/reports/*.csv reports/
                         docker rm $id
-                    """
+                    '''
                 }
                 stage('ArchiveArtifacts') {
                     sh """
