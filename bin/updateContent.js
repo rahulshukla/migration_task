@@ -15,7 +15,7 @@ const batchRequest = require('batch-request-js')
  * 
  */
 function updateContentWithItemSet(contentIdentifier, itemSetIdentifier, contentStatus, versionKey) {
-    log(chalk.bold.yellow("Getting Access Token"))
+    log(chalk.bold.yellow("Getting Access Token in update content"))
     const requestBody = {
         client_id: constants.clientId,
         username: constants.username,

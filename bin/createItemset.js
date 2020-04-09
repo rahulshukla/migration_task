@@ -23,7 +23,7 @@ function getDataFromCSV() {
 }
 
 function getQumlQuestions() {
-  log(chalk.bold.yellow("Getting Access Token"))
+  log(chalk.bold.yellow("Getting Access Token in createItemset"))
   const requestBody = {
       client_id: constants.clientId,
       username: constants.username,

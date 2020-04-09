@@ -69,7 +69,7 @@ function upgradeQumlQuestion (QumlData) {
 }
 
 function getAccessToken(QumlData) {
-    log(chalk.bold.yellow("Getting Access Token to Upgrade"))
+    log(chalk.bold.yellow("Getting Access Token to UpgradeQumlQuestion"))
     const requestBody = {
         client_id: constants.clientId,
         username: constants.username,
