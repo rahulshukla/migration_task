@@ -76,7 +76,7 @@ async function getQumlInBatch (access_token) {
         }
 
         log(JSON.stringify(requestBody))
-          const API_ENDPOINT =  constants.apiEndpointUrl .concat("/itemset/v1/create")
+          const API_ENDPOINT =  constants.apiEndpointUrl .concat("/itemset/v3/create")
            log(API_ENDPOINT) 
           axios.post(API_ENDPOINT, requestBody, config).then((result) => {
               log(result)
