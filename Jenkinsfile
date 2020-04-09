@@ -37,7 +37,7 @@ node() {
             stage('Run Migration Script') {
                 sh """
                     docker stop --force migration_container || true && docker rm --force migration_container || true
-                    docker run --name migration_container -d -w /migration_task -e API_END_POINT_API='\${API_END_POINT}' -e ASSESSMENT_API_END_POINT='\${ASSESSMENT_API_END_POINT}' node sleep infinity
+                    docker run --name migration_container -d -w /migration_task -e API_END_POINT_API='\${params.API_END_POINT}' -e ASSESSMENT_API_END_POINT='\${params.ASSESSMENT_API_END_POINT}' node sleep infinity
                     id=\$(docker ps -aqf "name=migration_container")
                     docker cp migration_task/  \${id}:.
                     docker exec \${id} npm install /migration_task
