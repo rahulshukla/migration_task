@@ -15,8 +15,9 @@ module.exports = {
      * @const {string}
      * @example https://dev.sunbirded.org/action
      */
-    // apiEndpointUrl: process.env['API_END_POINT_API'],
-    apiEndpointUrl: "https://dev.sunbirded.org/action",
+    apiEndpointUrl: process.env.API_END_POINT_API,
+
+    assessmentApiEndpointUrl: process.env.ASSESSMENT_API_END_POINT,
 
     /**
      * The const of client ID
