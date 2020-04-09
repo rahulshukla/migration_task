@@ -113,7 +113,7 @@ function patchQuestionForNewVersion (result,QumlData) {
     // log(JSON.stringify(requestBody))
     // log("-----------------------------------------------")
 
-    axios.patch(constants.apiEndpointUrl.concat('/assessment/v3/items/update/').concat(QumlData.assessment_item.identifier) , requestBody, config).then((result) => {
+    axios.patch(constants.assessmentApiEndpointUrl.concat('/assessment/v3/items/update/').concat(QumlData.assessment_item.identifier) , requestBody, config).then((result) => {
         updateReport(QumlData,'upgraded')
         // console.log(result)
         // log(QumlData)
