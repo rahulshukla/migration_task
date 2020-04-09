@@ -11,6 +11,7 @@ const batchRequest = require('batch-request-js')
 , _ = require('lodash')
 , { v4: uuidv4 } = require('uuid')
 , updateContent  = require(path.join(__dirname,  'updateContent'))
+, createCsvWriter = require('csv-writer').createObjectCsvWriter;
 
 function getDataFromCSV() {
     var csv = fs.readFileSync(constants.content_csv_file_rath);
