@@ -70,7 +70,7 @@ function getOldQumlContent(token) {
             'Authorization': 'Bearer '.concat(token)
         }
     }
-
+    log('Request endpoint is ' + constants.apiEndpointUrl + '/composite/v3/search ' +" request body is " + JSON.stringify(requestBody) + 'with headers '+ JSON.stringify(config)) 
     axios.post(constants.apiEndpointUrl + '/composite/v3/search', requestBody, config).then((result) => {
             // log(result.data.result.content)
             createCSVFromQuestionData(result.data.result.content)
