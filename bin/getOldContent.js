@@ -20,30 +20,31 @@ function generateContentList() {
 }
 
 function getAccessToken() {
-    log(chalk.bold.yellow("Getting Access Token"))
-    const requestBody = {
-        client_id: constants.clientId,
-        username: constants.username,
-        password: constants.password,
-        grant_type: constants.grant_type,
-    }
-    const config = {
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
+    if(constants.access_token_required){
+        log(chalk.bold.yellow("Getting Access Token"))
+        const requestBody = {
+            client_id: constants.clientId,
+            username: constants.username,
+            password: constants.password,
+            grant_type: constants.grant_type,
         }
+        const config = {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+        axios.post(constants.authEndpointUrl, qs.stringify(requestBody), config).then((result) => {
+                getOldQumlContent(result.data.access_token)
+            })
+            .catch((err) => {
+                log(err)
+            })
+    } else {
+        getOldQumlContent('')
     }
-    axios.post(constants.authEndpointUrl, qs.stringify(requestBody), config).then((result) => {
-            setAccessToken(result);
-        })
-        .catch((err) => {
-            log(err)
-        })
+    
 }
 
-function setAccessToken(response) {
-    const access_token = response.data.access_token
-    getOldQumlContent(access_token)
-}
 
 function getOldQumlContent(token) {
     log(chalk.bold.yellow("Searching for QUML version 0.5 content"))

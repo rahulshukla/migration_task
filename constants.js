@@ -80,7 +80,14 @@ module.exports = {
      *
      * @const {number}
      */
-    delay_between_request: 500
+    delay_between_request: 500,
+
+    /**
+     * boolean value if access token required or not
+     *
+     * @const {boolean}
+     */
+    access_token_required: false
 
 
 }

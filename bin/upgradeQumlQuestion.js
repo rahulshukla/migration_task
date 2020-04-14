@@ -69,27 +69,33 @@ function upgradeQumlQuestion (QumlData) {
 }
 
 function getAccessToken(QumlData) {
-    log(chalk.bold.yellow("Getting Access Token to UpgradeQumlQuestion"))
-    const requestBody = {
-        client_id: constants.clientId,
-        username: constants.username,
-        password: constants.password,
-        grant_type: constants.grant_type,
-    }
-    const config = {
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
+    if(constants.access_token_required){
+        log(chalk.bold.yellow("Getting Access Token to UpgradeQumlQuestion"))
+        const requestBody = {
+            client_id: constants.clientId,
+            username: constants.username,
+            password: constants.password,
+            grant_type: constants.grant_type,
         }
+        const config = {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+        axios.post(constants.authEndpointUrl, qs.stringify(requestBody), config).then((result) => {
+            patchQuestionForNewVersion(result.data.access_token,QumlData);
+            })
+            .catch((err) => {
+                log(err)
+            })
+
+    } else {
+        patchQuestionForNewVersion('',QumlData);
     }
-    axios.post(constants.authEndpointUrl, qs.stringify(requestBody), config).then((result) => {
-        patchQuestionForNewVersion(result,QumlData);
-        })
-        .catch((err) => {
-            log(err)
-        })
+    
 }
 
-function patchQuestionForNewVersion (result,QumlData) {
+function patchQuestionForNewVersion (access_token,QumlData) {
     const objectType = (_.has(QumlData.assessment_item, 'objectType')) ? QumlData.assessment_item.objectType : 'AssessmentItem'
     let requestBody = {
         "request": {
@@ -106,7 +112,7 @@ function patchQuestionForNewVersion (result,QumlData) {
         headers: {
             'Content-Type': 'application/json',
             'Accept-Encoding': 'application/gzip',
-            'Authorization': 'Bearer '.concat(result.data.access_token)
+            'Authorization': 'Bearer '.concat(access_token)
         }
     }
 

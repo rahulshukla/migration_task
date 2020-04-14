@@ -19,24 +19,31 @@ function getDataFromCSV() {
 }
 
 function getQumlQuestions() {
-  log(chalk.bold.yellow("Getting Access Token in updatequmldata"))
-  const requestBody = {
-      client_id: constants.clientId,
-      username: constants.username,
-      password: constants.password,
-      grant_type: constants.grant_type,
+  if(constants.access_token_required){
+    log(chalk.bold.yellow("Getting Access Token in updatequmldata"))
+    const requestBody = {
+        client_id: constants.clientId,
+        username: constants.username,
+        password: constants.password,
+        grant_type: constants.grant_type,
+    }
+    const config = {
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+    }
+    axios.post(constants.authEndpointUrl, qs.stringify(requestBody), config).then((result) => {
+      getQumlInBatch(result.data.access_token);
+        })
+        .catch((err) => {
+            log(err)
+        })
+
+  } else {
+    getQumlInBatch('');
+
   }
-  const config = {
-      headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-      }
-  }
-  axios.post(constants.authEndpointUrl, qs.stringify(requestBody), config).then((result) => {
-    getQumlInBatch(result.data.access_token);
-      })
-      .catch((err) => {
-          log(err)
-      })
+  
 }
 
 async function getQumlInBatch (access_token) {

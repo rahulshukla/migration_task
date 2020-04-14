@@ -15,24 +15,31 @@ const batchRequest = require('batch-request-js')
  * 
  */
 function updateContentWithItemSet(contentIdentifier, itemSetIdentifier, contentStatus, versionKey) {
-    log(chalk.bold.yellow("Getting Access Token in update content"))
-    const requestBody = {
-        client_id: constants.clientId,
-        username: constants.username,
-        password: constants.password,
-        grant_type: constants.grant_type,
-    }
-    const config = {
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
+    if(constants.access_token_required){
+        log(chalk.bold.yellow("Getting Access Token in update content"))
+        const requestBody = {
+            client_id: constants.clientId,
+            username: constants.username,
+            password: constants.password,
+            grant_type: constants.grant_type,
         }
+        const config = {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+        axios.post(constants.authEndpointUrl, qs.stringify(requestBody), config).then((result) => {
+            patchContentWithItemset(result.data.access_token, contentIdentifier, itemSetIdentifier, contentStatus, versionKey);
+            })
+            .catch((err) => {
+                log(err)
+            })
+
+    } else {
+        patchContentWithItemset('', contentIdentifier, itemSetIdentifier, contentStatus, versionKey);
+
     }
-    axios.post(constants.authEndpointUrl, qs.stringify(requestBody), config).then((result) => {
-        patchContentWithItemset(result.data.access_token, contentIdentifier, itemSetIdentifier, contentStatus, versionKey);
-        })
-        .catch((err) => {
-            log(err)
-        })
+    
   }
 
   function patchContentWithItemset(access_token, contentIdentifier, itemSetIdentifier, contentStatus, versionKey) {
