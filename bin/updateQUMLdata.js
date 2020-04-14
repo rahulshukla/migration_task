@@ -61,7 +61,9 @@ async function getQumlInBatch (access_token) {
   }
   const API_ENDPOINT =  constants.assessmentApiEndpointUrl .concat("/assessment/v3/items/read")
   const request = (qumlId) => axios.get(`${API_ENDPOINT}/${qumlId}`, config).then(response => {
-    upgradeUtil.upgradeQumlQuestion(response.data.result)
+    // upgradeUtil.upgradeQumlQuestion(response.data.result)
+    log("item read API is")
+    log(JSON.stringify(response.data.result))
   })
   .catch((error) => {
     log(error);

@@ -21,7 +21,6 @@ function upgradeQumlQuestion (QumlData) {
 
     let newEditorState = {};
     if(_.lowerCase(QumlData.assessment_item.category) === "mcq") {
-
         newEditorState.options = (_.has(QumlData.assessment_item.editorState, 'options')) ? QumlData.assessment_item.editorState.options : options;
     } else if ( (_.lowerCase(QumlData.assessment_item.category) === "vsa") 
     || (_.lowerCase(QumlData.assessment_item.category) === "sa")
