@@ -80,7 +80,7 @@ async function getQumlInBatch (access_token) {
             }
         }
 
-          const API_ENDPOINT =  constants.apiEndpointUrl .concat("/itemset/v3/create")
+          const API_ENDPOINT =  constants.kp_assessment_service_base_path .concat("/itemset/v3/create")
            log('Request endpoint is' + API_ENDPOINT +" request body is " + JSON.stringify(requestBody) + 'with headers '+ JSON.stringify(config)) 
           axios.post(API_ENDPOINT, requestBody, config).then((result) => {
               log('Itemset successful with: ' + result)

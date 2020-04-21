@@ -61,8 +61,13 @@ function upgradeQumlQuestion (QumlData) {
         _.set(QumlData.assessment_item,'responseDeclaration',resDecl)
     }
 
+    // updating QUML version from 0.5 to 1.0
+    (_.has(QumlData.assessment_item, 'qumlVersion')) ? (QumlData.assessment_item.qumlVersion = 1) : _.set(QumlData.assessment_item,'qumlVersion',1)
+    
+    // Adding migration tag
+    _.set(QumlData.assessment_item, 'prevQumlVersion', '0.5-1')
 
-    // log(JSON.stringify(QumlData))
+    // log(JSON.stringify(QumlData) + "<br><br>")
     getAccessToken(QumlData)
     }
 }
@@ -81,6 +86,7 @@ function getAccessToken(QumlData) {
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
         }
+        
         axios.post(constants.authEndpointUrl, qs.stringify(requestBody), config).then((result) => {
             patchQuestionForNewVersion(result.data.access_token,QumlData);
             })
@@ -114,11 +120,11 @@ function patchQuestionForNewVersion (access_token,QumlData) {
             'Authorization': 'Bearer '.concat(access_token)
         }
     }
-
+    
     // log(JSON.stringify(requestBody))
     // log("-----------------------------------------------")
 
-    axios.patch(constants.assessmentApiEndpointUrl.concat('/assessment/v3/items/update/').concat(QumlData.assessment_item.identifier) , requestBody, config).then((result) => {
+    axios.patch(constants.kp_learning_service_base_path.concat('/assessmentitem/v3/update').concat(QumlData.assessment_item.identifier) , requestBody, config).then((result) => {
         updateReport(QumlData,'upgraded')
         // console.log(result)
         // log(QumlData)
