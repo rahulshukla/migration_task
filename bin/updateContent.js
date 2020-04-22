@@ -10,6 +10,9 @@ const batchRequest = require('batch-request-js')
 , csvsync = require('csvsync')
 , _ = require('lodash')
 , createCsvWriter = require('csv-writer').createObjectCsvWriter;
+var axiosLogger = require("axios-logger")
+const instance = axios.create();
+instance.interceptors.response.use(AxiosLogger.responseLogger);
 
 /**
  * 
@@ -71,6 +74,7 @@ function updateContentWithItemSet(contentIdentifier, itemSetIdentifier, contentS
 
     //   log(JSON.stringify(reqBody))
     log('Request endpoint is' + constants.kp_content_service_base_path.concat('/content/v3/update/').concat(contentIdentifier) +" request body is " + JSON.stringify(requestBody) + 'with headers '+ JSON.stringify(config)) 
+    
     axios.patch(constants.kp_content_service_base_path.concat('/content/v3/update/').concat(contentIdentifier) , requestBody, config)
     .then((result) => {
         if( (_.lowerCase(contentStatus)) === 'live' ) {
