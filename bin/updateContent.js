@@ -83,7 +83,7 @@ function updateContentWithItemSet(contentIdentifier, itemSetIdentifier, contentS
     .catch((err) => {
         log("Failed update content with item set " + err)
         failedItemSetToContentReport(contentIdentifier, itemSetIdentifier, contentStatus, versionKey)
-        log(chalk.red(err.response.data))
+        log(chalk.red(JSON.stringify(err.response.data)))
     })
   }
 
