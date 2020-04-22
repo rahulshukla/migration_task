@@ -124,7 +124,7 @@ function patchQuestionForNewVersion (access_token,QumlData) {
     // log(JSON.stringify(requestBody))
     // log("-----------------------------------------------")
 
-    axios.patch(constants.kp_learning_service_base_path.concat('/assessmentitem/v3/update').concat(QumlData.assessment_item.identifier) , requestBody, config).then((result) => {
+    axios.patch(constants.kp_learning_service_base_path.concat('/assessment/v3/items/update').concat(QumlData.assessment_item.identifier) , requestBody, config).then((result) => {
         updateReport(QumlData,'upgraded')
         // console.log(result)
         // log(QumlData)
