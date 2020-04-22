@@ -22,7 +22,6 @@
   "homepage": "https://github.com/rahulshukla/migration_task#readme",
   "dependencies": {
     "axios": "^0.19.2",
-    "axios-debug-log": "^0.7.0",
     "batch-request-js": "^2.0.2",
     "chalk": "^3.0.0",
     "convert-array-to-csv": "^1.0.10",
