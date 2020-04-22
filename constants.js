@@ -96,7 +96,7 @@ module.exports = {
      *
      * @const {boolean}
      */
-    access_token_required: true,
+    access_token_required: false,
 
 
 
