@@ -12,7 +12,7 @@ const batchRequest = require('batch-request-js')
 , createCsvWriter = require('csv-writer').createObjectCsvWriter;
 var axiosLogger = require("axios-logger")
 const instance = axios.create();
-instance.interceptors.response.use(AxiosLogger.responseLogger);
+instance.interceptors.response.use(axiosLogger.responseLogger);
 
 /**
  * 
