@@ -111,6 +111,7 @@ function updateContentWithItemSet(contentIdentifier, itemSetIdentifier, contentS
     .catch((err) => {
         updatePublishReport(contentIdentifier, itemSetIdentifier, contentStatus, versionKey,'failed')
         log(chalk.red(err))
+        log(chalk.red(JSON.stringify(err.response.data)))
     })
   }
 
@@ -137,7 +138,7 @@ function updateContentWithItemSet(contentIdentifier, itemSetIdentifier, contentS
     }]
     csvWriter.writeRecords(resultData)       // returns a promise
     .then(() => {
-        log(chalk.bold.green('Successfully Publish Report generated for ' .concat(contentIdentifier)));
+        log(chalk.bold.green('Publish Report generated for ' .concat(contentIdentifier)));
     });
 }
 
@@ -164,7 +165,7 @@ async function failedItemSetToContentReport(contentIdentifier, itemSetIdentifier
     }]
     csvWriter.writeRecords(resultData)       // returns a promise
     .then(() => {
-        log(chalk.bold.green('Failed Publish Report generated for ' .concat(contentIdentifier)));
+        log(chalk.bold.green('Failed Itemset Report generated for ' .concat(contentIdentifier)));
     });
 }
 
