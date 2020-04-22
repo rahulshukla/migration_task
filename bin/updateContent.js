@@ -74,6 +74,7 @@ function updateContentWithItemSet(contentIdentifier, itemSetIdentifier, contentS
     axios.patch(constants.kp_content_service_base_path.concat('/content/v3/update/').concat(contentIdentifier) , requestBody, config)
     .then((result) => {
         if( (_.lowerCase(contentStatus)) === 'live' ) {
+            log(result)
             contentPublish(access_token, contentIdentifier, itemSetIdentifier, contentStatus, versionKey)
         }
     })
