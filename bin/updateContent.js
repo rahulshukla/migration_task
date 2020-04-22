@@ -74,7 +74,7 @@ function updateContentWithItemSet(contentIdentifier, itemSetIdentifier, contentS
     axios.patch(constants.kp_content_service_base_path.concat('/content/v3/update/').concat(contentIdentifier) , requestBody, config)
     .then((result) => {
         if( (_.lowerCase(contentStatus)) === 'live' ) {
-            log(result)
+            log("Content update with item set " + result)
             contentPublish(access_token, contentIdentifier, itemSetIdentifier, contentStatus, versionKey)
         }
     })
@@ -102,6 +102,7 @@ function updateContentWithItemSet(contentIdentifier, itemSetIdentifier, contentS
       }
 
       axios.patch(constants.kp_learning_service_base_path.concat('/content/v3/publish/').concat(contentIdentifier) , requestBody, config).then((result) => {
+        log("Content publish" + result)
         updatePublishReport(contentIdentifier, itemSetIdentifier, contentStatus, versionKey,'published')
     })
     .catch((err) => {
