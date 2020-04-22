@@ -43,10 +43,10 @@ function updateContentWithItemSet(contentIdentifier, itemSetIdentifier, contentS
   }
 
   function patchContentWithItemset(access_token, contentIdentifier, itemSetIdentifier, contentStatus, versionKey) {
-    log("content id = " + contentIdentifier)
-    log("itemsetId id = " + itemSetIdentifier)
-    log("contentStatus id = " + contentStatus)
-    log("versionKey id = " + versionKey)
+    // log("content id = " + contentIdentifier)
+    // log("itemsetId id = " + itemSetIdentifier)
+    // log("contentStatus id = " + contentStatus)
+    // log("versionKey id = " + versionKey)
 
     const config = {
         headers: {
@@ -70,7 +70,7 @@ function updateContentWithItemSet(contentIdentifier, itemSetIdentifier, contentS
       }
 
     //   log(JSON.stringify(reqBody))
-
+    log('Request endpoint is' + constants.kp_content_service_base_path.concat('/content/v3/update/').concat(contentIdentifier) +" request body is " + JSON.stringify(requestBody) + 'with headers '+ JSON.stringify(config)) 
     axios.patch(constants.kp_content_service_base_path.concat('/content/v3/update/').concat(contentIdentifier) , requestBody, config)
     .then((result) => {
         if( (_.lowerCase(contentStatus)) === 'live' ) {
