@@ -9,8 +9,9 @@ const batchRequest = require('batch-request-js')
 , log = console.log
 , csvsync = require('csvsync')
 , _ = require('lodash')
-, uuidv4 = require('uuid/v4')
+, { v4: uuidv4 } = require('uuid')
 , updateContent  = require(path.join(__dirname,  'updateContent'))
+, createCsvWriter = require('csv-writer').createObjectCsvWriter;
 
 function getDataFromCSV() {
     var csv = fs.readFileSync(constants.content_csv_file_rath);
@@ -18,28 +19,33 @@ function getDataFromCSV() {
       returnObject: true,});
     //   log(data)
     return data
-    
 }
 
 function getQumlQuestions() {
-  log(chalk.bold.yellow("Getting Access Token"))
-  const requestBody = {
-      client_id: constants.clientId,
-      username: constants.username,
-      password: constants.password,
-      grant_type: constants.grant_type,
-  }
-  const config = {
-      headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-      }
-  }
-  axios.post(constants.authEndpointUrl, qs.stringify(requestBody), config).then((result) => {
-    getQumlInBatch(result.data.access_token);
-      })
-      .catch((err) => {
-          log(err)
-      })
+  if(constants.access_token_required){
+    log(chalk.bold.yellow("Getting Access Token in createItemset"))
+    const requestBody = {
+        client_id: constants.clientId,
+        username: constants.username,
+        password: constants.password,
+        grant_type: constants.grant_type,
+    }
+    const config = {
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+    }
+    axios.post(constants.authEndpointUrl, qs.stringify(requestBody), config).then((result) => {
+      getQumlInBatch(result.data.access_token);
+        })
+        .catch((err) => {
+            log(err)
+        })
+
+  } else {
+    getQumlInBatch('');
+  }  
+  
 }
 
 async function getQumlInBatch (access_token) {
@@ -74,15 +80,14 @@ async function getQumlInBatch (access_token) {
             }
         }
 
-        // log(JSON.stringify(requestBody))
-          const API_ENDPOINT =  constants.apiEndpointUrl .concat("/itemset/v3/create")
-        //    log(API_ENDPOINT) 
+          const API_ENDPOINT =  constants.kp_assessment_service_base_path .concat("/itemset/v3/create")
+          //  log('Request endpoint is' + API_ENDPOINT +" request body is " + JSON.stringify(requestBody) + 'with headers '+ JSON.stringify(config)) 
           axios.post(API_ENDPOINT, requestBody, config).then((result) => {
-              log(result)
+              log('Itemset successful with: ' + result)
             updateContent.updateContentWithItemSet(value.identifier, result.data.result.identifier, value.status, value.versionKey )
             }).catch((err) => {
+                log('Itemset Failed with: ' + err)
                 failedItemSetToContentReport(value)
-                log(chalk.red(err))
             })
    })
 

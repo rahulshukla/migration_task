@@ -12,7 +12,7 @@ const batchRequest = require('batch-request-js')
 , upgradeUtil  = require(path.join(__dirname,  'upgradeQumlQuestion'))
 
 function getDataFromCSV() {
-    var csv = fs.readFileSync(constants.content_csv_file_rath);
+    var csv = fs.readFileSync(constants.ECML_content_identifier_path);
     var data = csvsync.parse(csv,{skipHeader: false,
       returnObject: true,});
     return data
@@ -48,32 +48,41 @@ function getQumlQuestions() {
 
 async function getQumlInBatch (access_token) {
   var row =getDataFromCSV()
-  let qumlIds = []
-  row.forEach(function (value) {
-    qumlIds.push(_.split(value.questions,','))
+  let contentIds = []
+//   log(typeof(row))
+  row.forEach(element => {
+    contentIds.push(element.identifier)
   });
-  qumlIds = _.uniq(_.flatten(qumlIds))
+  
+//   let qumlIds = []
+//   row.forEach(function (value) {
+//     qumlIds.push(_.split(value.questions,','))
+//   });
+    contentIds = _.uniq(_.flatten(contentIds))
+    // log(contentIds)
+
   const config = {
     headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer '.concat(access_token)
     }
   }
-  const API_ENDPOINT =  constants.kp_learning_service_base_path .concat("/assessment/v3/items/read")
-  const request = (qumlId) => axios.get(`${API_ENDPOINT}/${qumlId}`, config).then(response => {
-    upgradeUtil.upgradeQumlQuestion(response.data.result)
+//   /content/v3/read/do_112999482416209920112?fields=body
+  const API_ENDPOINT =  constants.assessmentApiEndpointUrl .concat("/content/v3/read")
+  const request = (qumlId) => axios.get(`${API_ENDPOINT}/${qumlId}`+'?fields=body', config).then(response => {
+    // upgradeUtil.upgradeQumlQuestion(response.data.result)
     // log("item read API is")
-    // log(JSON.stringify(response.data.result))
+    log((response.data.result.content.body))
   })
   .catch((error) => {
     log(error);
   });
 
-  const {error, data } = await batchRequest(qumlIds, request, { batchSize: constants.batch_size, delay: constants.delay_between_request })
-  log(chalk.green(JSON.stringify(data))) 
-  log(chalk.red(error)) 
+  const {error, data } = await batchRequest(contentIds, request, { batchSize: constants.batch_size, delay: constants.delay_between_request })
+//   log(chalk.green(JSON.stringify(data))) 
+//   log(chalk.red(error)) 
 }
 
-// getQumlQuestions()
+getQumlQuestions()
 
-exports.updateQumlQuestion = getQumlQuestions;
+// exports.updateQumlQuestion = getQumlQuestions;

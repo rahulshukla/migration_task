@@ -15,31 +15,38 @@ const batchRequest = require('batch-request-js')
  * 
  */
 function updateContentWithItemSet(contentIdentifier, itemSetIdentifier, contentStatus, versionKey) {
-    log(chalk.bold.yellow("Getting Access Token"))
-    const requestBody = {
-        client_id: constants.clientId,
-        username: constants.username,
-        password: constants.password,
-        grant_type: constants.grant_type,
-    }
-    const config = {
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
+    if(constants.access_token_required){
+        log(chalk.bold.yellow("Getting Access Token in update content"))
+        const requestBody = {
+            client_id: constants.clientId,
+            username: constants.username,
+            password: constants.password,
+            grant_type: constants.grant_type,
         }
+        const config = {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+        axios.post(constants.authEndpointUrl, qs.stringify(requestBody), config).then((result) => {
+            patchContentWithItemset(result.data.access_token, contentIdentifier, itemSetIdentifier, contentStatus, versionKey);
+            })
+            .catch((err) => {
+                log(err)
+            })
+
+    } else {
+        patchContentWithItemset('', contentIdentifier, itemSetIdentifier, contentStatus, versionKey);
+
     }
-    axios.post(constants.authEndpointUrl, qs.stringify(requestBody), config).then((result) => {
-        patchContentWithItemset(result.data.access_token, contentIdentifier, itemSetIdentifier, contentStatus, versionKey);
-        })
-        .catch((err) => {
-            log(err)
-        })
+    
   }
 
   function patchContentWithItemset(access_token, contentIdentifier, itemSetIdentifier, contentStatus, versionKey) {
-    log("content id = " + contentIdentifier)
-    log("itemsetId id = " + itemSetIdentifier)
-    log("contentStatus id = " + contentStatus)
-    log("versionKey id = " + versionKey)
+    // log("content id = " + contentIdentifier)
+    // log("itemsetId id = " + itemSetIdentifier)
+    // log("contentStatus id = " + contentStatus)
+    // log("versionKey id = " + versionKey)
 
     const config = {
         headers: {
@@ -63,16 +70,20 @@ function updateContentWithItemSet(contentIdentifier, itemSetIdentifier, contentS
       }
 
     //   log(JSON.stringify(reqBody))
-
-    axios.patch(constants.apiEndpointUrl.concat('/content/v3/update/').concat(contentIdentifier) , requestBody, config)
-    .then((result) => {
+    log('Request endpoint is' + constants.kp_content_service_base_path.concat('/content/v3/update/').concat(contentIdentifier) +" request body is " + JSON.stringify(requestBody) + 'with headers '+ JSON.stringify(config)) 
+    
+    axios.patch(constants.kp_content_service_base_path.concat('/content/v3/update/').concat(contentIdentifier) , requestBody, config)
+    .then( (response) => {
+        log("Content update call response ----------------- " + response.data)
         if( (_.lowerCase(contentStatus)) === 'live' ) {
+            log("Content update with item set " + result)
             contentPublish(access_token, contentIdentifier, itemSetIdentifier, contentStatus, versionKey)
         }
     })
     .catch((err) => {
+        log("Failed update content with item set " + err)
         failedItemSetToContentReport(contentIdentifier, itemSetIdentifier, contentStatus, versionKey)
-        log(chalk.red(err))
+        log(chalk.red(JSON.stringify(err.response.data)))
     })
   }
 
@@ -93,12 +104,14 @@ function updateContentWithItemSet(contentIdentifier, itemSetIdentifier, contentS
         }
       }
 
-      axios.patch(constants.apiEndpointUrl.concat('/content/v3/publish/').concat(contentIdentifier) , requestBody, config).then((result) => {
+      axios.patch(constants.kp_learning_service_base_path.concat('/content/v3/publish/').concat(contentIdentifier) , requestBody, config).then((result) => {
+        log("Content publish" + result)
         updatePublishReport(contentIdentifier, itemSetIdentifier, contentStatus, versionKey,'published')
     })
     .catch((err) => {
         updatePublishReport(contentIdentifier, itemSetIdentifier, contentStatus, versionKey,'failed')
         log(chalk.red(err))
+        log(chalk.red(JSON.stringify(err.response.data)))
     })
   }
 
@@ -152,7 +165,7 @@ async function failedItemSetToContentReport(contentIdentifier, itemSetIdentifier
     }]
     csvWriter.writeRecords(resultData)       // returns a promise
     .then(() => {
-        log(chalk.bold.green('Publish Report generated for ' .concat(contentIdentifier)));
+        log(chalk.bold.green('Failed Itemset Report generated for ' .concat(contentIdentifier)));
     });
 }
 

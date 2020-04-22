@@ -50,16 +50,12 @@ function getOldQumlContent(token) {
     log(chalk.bold.yellow("Searching for QUML version 0.5 content"))
     const requestBody = {
             "request": {
-              "exists": "questions",
               "filters": {
-                "contentType": "PracticeQuestionSet",
-                "medium": "English",
-                "objectType": "Content"
+                "objectType": "Content",
+                "status": [],
+                "mimeType": ["application/vnd.ekstep.ecml-archive"]
               },
-              "not_exists": "itemSets",
-              "sort_by": {
-                "createdOn": "desc"
-              }
+              "fields": ["identifier"]
             } 
     };
     const config = {
@@ -70,8 +66,8 @@ function getOldQumlContent(token) {
             'Authorization': 'Bearer '.concat(token)
         }
     }
-    log('Request endpoint is ' + constants.kp_search_service_base_path + '/v3/search ' +" request body is " + JSON.stringify(requestBody) + 'with headers '+ JSON.stringify(config)) 
-    axios.post(constants.kp_search_service_base_path + '/v3/search', requestBody, config).then((result) => {
+    // log('Request endpoint is ' + constants.kp_search_service_base_path + '/v3/search ' +" request body is " + JSON.stringify(requestBody) + 'with headers '+ JSON.stringify(config)) 
+    axios.post(constants.apiEndpointUrl + '/composite/v3/search', requestBody, config).then((result) => {
             // log(result.data.result.content)
             createCSVFromQuestionData(result.data.result.content)
         })
@@ -86,23 +82,13 @@ function createCSVFromQuestionData(questionData) {
     questionData.forEach(function(v) {
         contentIdArray.push({
             identifier: v.identifier,
-            questions:_.join(v.questions),
-            program: v.program,
             objectType: v.objectType,
-            status: v.status,
-            resourceType: v.resourceType,
-            node_id: v.node_id,
-            author: v.author,
-            name:v.name,
-            language:_.join(v.language),
-            status:v.status,
-            versionKey:v.versionKey
         })
     });
     const csvFromArrayOfObjects = convertArrayToCSV(contentIdArray);
     
     const writeFile = util.promisify(fs.writeFile);
-    writeFile(constants.content_csv_file_rath, csvFromArrayOfObjects, 'utf8').then(() => {
+    writeFile(constants.ECML_content_identifier_path, csvFromArrayOfObjects, 'utf8').then(() => {
         const results = perf.stop();
         log(chalk.bold.greenBright('File is saved with content ID and ready to process for batch execution'));
         log(chalk.white("Script execution time was " + results.words + " for " + (contentIdArray.length) + " content")); // in milliseconds
@@ -110,4 +96,4 @@ function createCSVFromQuestionData(questionData) {
 }
 
 generateContentList()
-// exports.generateContentList = generateContentList;
+// exports.generateECMLContentList = generateContentList;

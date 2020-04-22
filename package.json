@@ -1,11 +1,11 @@
 {
   "name": "content_migration_task",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Content migration for QUML version 0.5 to 1.0",
   "main": "index.js",
   "scripts": {
     "test": "test",
-    "migration" : "node index.js"
+    "migration": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -32,8 +32,8 @@
     "lodash": "^4.17.15",
     "npm": "^6.14.3",
     "querystring": "^0.2.0",
-    "request": "^2.88.2",
     "util": "^0.12.2",
     "uuid": "^7.0.3"
-  }
+  },
+  "devDependencies": {}
 }
