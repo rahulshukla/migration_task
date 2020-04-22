@@ -35,8 +35,8 @@ node() {
 
             }
             stage('Run Migration Script') {
+                println(ANSI_BOLD + ANSI_YELLOW +"Executing Migration inside Docker container")
                 sh """
-                    echo "\033[1;33m[Executing Migration inside Docker container]    \033[0m"
                     docker stop --force migration_container || true && docker rm --force migration_container || true
                     docker run --name migration_container -d -w /migration_task -e kp_search_service_base_path=$params.kp_search_service_base_path -e kp_learning_service_base_path=$params.kp_learning_service_base_path  -e kp_assessment_service_base_path=$params.kp_assessment_service_base_path  -e kp_content_service_base_path=$params.kp_content_service_base_path  node sleep infinity
                     id=\$(docker ps -aqf "name=migration_container")
@@ -49,8 +49,8 @@ node() {
                 """
             }
             stage('Generate Reports') {
+                println(ANSI_BOLD + ANSI_YELLOW +"Generating artifects")
                 sh """
-                    echo "\033[1;33m[Generating artifects]    \033[0m"
                     zip -j  reports-artifacts_${artifact_version}.zip  migration_task/generatedReports/reports/*
                 """
                 archiveArtifacts "reports-artifacts_${artifact_version}.zip"
