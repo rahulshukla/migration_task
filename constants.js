@@ -20,7 +20,7 @@ module.exports = {
 
     // assessmentApiEndpointUrl: process.env.ASSESSMENT_API_END_POINT,
     // assessmentApiEndpointUrl: "https://dev.sunbirded.org/action",
-
+    // kp_search_service_base_path : "https://dev.sunbirded.org/action",
     kp_learning_service_base_path : process.env.kp_learning_service_base_path,
     kp_search_service_base_path : process.env.kp_search_service_base_path,
     kp_assessment_service_base_path:process.env.kp_assessment_service_base_path,
@@ -96,7 +96,8 @@ module.exports = {
      *
      * @const {boolean}
      */
-    access_token_required: false,
+    access_token_required: true,
+
 
 
 
