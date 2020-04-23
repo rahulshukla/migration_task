@@ -29,24 +29,43 @@ function updateContentWithItemSet(contentIdentifier, itemSetIdentifier, contentS
             }
         }
         axios.post(constants.authEndpointUrl, qs.stringify(requestBody), config).then((result) => {
-            patchContentWithItemset(result.data.access_token, contentIdentifier, itemSetIdentifier, contentStatus, versionKey);
+            getContentVersionKey(result.data.access_token, contentIdentifier, itemSetIdentifier, contentStatus, versionKey);
             })
             .catch((err) => {
                 log(err)
             })
 
     } else {
-        patchContentWithItemset('', contentIdentifier, itemSetIdentifier, contentStatus, versionKey);
+        getContentVersionKey('', contentIdentifier, itemSetIdentifier, contentStatus, versionKey);
 
     }
     
   }
 
+  function getContentVersionKey(access_token, contentIdentifier, itemSetIdentifier, contentStatus, versionKey) {
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept-Encoding': 'application/gzip',
+            'Authorization': 'Bearer '.concat(access_token)
+        }
+    }
+    const API_ENDPOINT =  constants.kp_content_service_base_path + "/content/v3/read"
+    axios.get(`${API_ENDPOINT}/${contentIdentifier}`+ "?mode=edit", config).then(response => {
+        patchContentWithItemset(access_token, contentIdentifier, itemSetIdentifier, contentStatus, response.data.result.content.versionKey)
+        // log("item read API is")
+        log(JSON.stringify("version key was" + versionKey + "changed to " + response.data.result.content.versionKey))
+      })
+      .catch((error) => {
+        log(error);
+      });
+  }
+
   function patchContentWithItemset(access_token, contentIdentifier, itemSetIdentifier, contentStatus, versionKey) {
-    // log("content id = " + contentIdentifier)
-    // log("itemsetId id = " + itemSetIdentifier)
-    // log("contentStatus id = " + contentStatus)
-    // log("versionKey id = " + versionKey)
+    log("content id = " + contentIdentifier)
+    log("itemsetId id = " + itemSetIdentifier)
+    log("contentStatus id = " + contentStatus)
+    log("versionKey id = " + versionKey)
 
     const config = {
         headers: {
@@ -168,5 +187,5 @@ async function failedItemSetToContentReport(contentIdentifier, itemSetIdentifier
         log(chalk.bold.green('Failed Itemset Report generated for ' .concat(contentIdentifier)));
     });
 }
-
+// getContentVersionKey()
 exports.updateContentWithItemSet = updateContentWithItemSet
