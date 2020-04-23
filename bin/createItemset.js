@@ -48,7 +48,7 @@ function getQumlQuestions() {
   
 }
 
-async function getQumlInBatch (access_token) {
+function getQumlInBatch (access_token) {
   var row =getDataFromCSV()
   var questionIdObjForItemset = []
   row.forEach(function (value) {
@@ -81,7 +81,7 @@ async function getQumlInBatch (access_token) {
         }
 
           const API_ENDPOINT =  constants.kp_assessment_service_base_path .concat("/itemset/v3/create")
-          //  log('Request endpoint is' + API_ENDPOINT +" request body is " + JSON.stringify(requestBody) + 'with headers '+ JSON.stringify(config)) 
+           log('Request endpoint is' + API_ENDPOINT +" request body is " + JSON.stringify(requestBody) + 'with headers '+ JSON.stringify(config)) 
           axios.post(API_ENDPOINT, requestBody, config).then((result) => {
             log("\n"+"itemset response is"+ JSON.stringify(result.data.result)+"\n")
             updateContent.updateContentWithItemSet(value.identifier, result.data.result.identifier, value.status, value.versionKey )
@@ -93,7 +93,7 @@ async function getQumlInBatch (access_token) {
 
 }
 
-async function failedItemSetToContentReport(value) {
+function failedItemSetToContentReport(value) {
     const csvWriter = createCsvWriter({
         path: constants.failed_itemset_creation_result_csv_file_rath,
         append: true, // Below header will not get added if this property is true, just to make a blank template make it false 
