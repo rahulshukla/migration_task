@@ -135,9 +135,7 @@ function updateContentWithItemSet(contentIdentifier, itemSetIdentifier, contentS
         updatePublishReport(contentIdentifier, itemSetIdentifier, contentStatus, versionKey,'published')
     })
     .catch((err) => {
-        log("Content filed to publish" + result)
         updatePublishReport(contentIdentifier, itemSetIdentifier, contentStatus, versionKey,'failed')
-        log(chalk.red(err))
         log(chalk.red(JSON.stringify(err.response.data)))
     })
   }
