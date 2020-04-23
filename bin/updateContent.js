@@ -43,8 +43,6 @@ function updateContentWithItemSet(contentIdentifier, itemSetIdentifier, contentS
   }
 
   function getContentVersionKey(access_token, contentIdentifier, itemSetIdentifier, contentStatus, versionKey) {
-    // const qumlId = "do_11292651409217126413"
-    // const access_token = ""
     const config = {
         headers: {
             'Content-Type': 'application/json',
@@ -53,8 +51,7 @@ function updateContentWithItemSet(contentIdentifier, itemSetIdentifier, contentS
         }
     }
     const API_ENDPOINT =  constants.kp_content_service_base_path + "/content/v3/read"
-    // const API_ENDPOINT = "http://11.2.6.6/content/content/v3/read"
-    axios.get(`${API_ENDPOINT}/${contentIdentifier}`+ "mode=edit", config).then(response => {
+    axios.get(`${API_ENDPOINT}/${contentIdentifier}`+ "?mode=edit", config).then(response => {
         patchContentWithItemset(access_token, contentIdentifier, itemSetIdentifier, contentStatus, response.data.result.content.versionKey)
         // log("item read API is")
         log(JSON.stringify("version key was" + versionKey + "changed to " + response.data.result.content.versionKey))
