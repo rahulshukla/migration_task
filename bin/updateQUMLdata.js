@@ -59,11 +59,13 @@ async function getQumlInBatch (access_token) {
         'Authorization': 'Bearer '.concat(access_token)
     }
   }
+  log('Request endpoint is' + constants.kp_content_service_base_path.concat('/assessment/v3/items/read').concat(qumlId) +" request body is " + JSON.stringify(requestBody) + 'with headers '+ JSON.stringify(config)) 
   const API_ENDPOINT =  constants.kp_learning_service_base_path .concat("/assessment/v3/items/read")
   const request = (qumlId) => axios.get(`${API_ENDPOINT}/${qumlId}`, config).then(response => {
+    log("assessment read response is"+ JSON.stringify(response.data.result))
     upgradeUtil.upgradeQumlQuestion(response.data.result)
     // log("item read API is")
-    // log(JSON.stringify(response.data.result))
+    
   })
   .catch((error) => {
     log(error);
