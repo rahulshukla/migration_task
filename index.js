@@ -8,6 +8,7 @@ const constant  = require(path.join(__dirname,  './constants'))
 //  to generate the list of content which doesn't have itemset attached
 // generateList.generateContentList();
 
+
 // fetch QUML version 0.5 version question attached to content and upgrade to QUML 1.0
 updateQumlQuestion.updateQumlQuestion();
 
