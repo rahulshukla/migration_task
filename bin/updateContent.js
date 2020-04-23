@@ -190,5 +190,5 @@ async function failedItemSetToContentReport(contentIdentifier, itemSetIdentifier
         log(chalk.bold.green('Failed Itemset Report generated for ' .concat(contentIdentifier)));
     });
 }
-getContentVersionKey()
-// exports.updateContentWithItemSet = updateContentWithItemSet
+// getContentVersionKey()
+exports.updateContentWithItemSet = updateContentWithItemSet
