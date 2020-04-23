@@ -109,6 +109,11 @@ function updateContentWithItemSet(contentIdentifier, itemSetIdentifier, contentS
   }
 
   function contentPublish(access_token, contentIdentifier, itemSetIdentifier, contentStatus, versionKey ) {
+      log("in publish with ")
+      log("content id = " + contentIdentifier)
+      log("itemsetId id = " + itemSetIdentifier)
+      log("contentStatus id = " + contentStatus)
+      log("versionKey id = " + versionKey)
     const config = {
         headers: {
             'Content-Type': 'application/json',
@@ -130,6 +135,7 @@ function updateContentWithItemSet(contentIdentifier, itemSetIdentifier, contentS
         updatePublishReport(contentIdentifier, itemSetIdentifier, contentStatus, versionKey,'published')
     })
     .catch((err) => {
+        log("Content filed to publish" + result)
         updatePublishReport(contentIdentifier, itemSetIdentifier, contentStatus, versionKey,'failed')
         log(chalk.red(err))
         log(chalk.red(JSON.stringify(err.response.data)))
