@@ -131,7 +131,7 @@ function updateContentWithItemSet(contentIdentifier, itemSetIdentifier, contentS
       }
 
       axios.patch(constants.kp_learning_service_base_path.concat('/content/v3/publish/').concat(contentIdentifier) , requestBody, config).then((result) => {
-        log("Content publish" + result)
+        log("Content publish" + JSON.stringify(result.data))
         updatePublishReport(contentIdentifier, itemSetIdentifier, contentStatus, versionKey,'published')
     })
     .catch((err) => {
