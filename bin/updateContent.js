@@ -96,7 +96,7 @@ function updateContentWithItemSet(contentIdentifier, itemSetIdentifier, contentS
     
     axios.patch(constants.kp_content_service_base_path.concat('/content/v3/update/').concat(contentIdentifier) , requestBody, config)
     .then( (response) => {
-        log("Content update call response ----------------- " + response.data)
+        log("Content update call response ----------------- " + JSON.stringify(response.data))
         if( (_.lowerCase(contentStatus)) === 'live' ) {
             contentPublish(access_token, contentIdentifier, itemSetIdentifier, contentStatus, versionKey)
         }
