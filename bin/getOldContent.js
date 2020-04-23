@@ -109,5 +109,5 @@ function createCSVFromQuestionData(questionData) {
     }).catch(error => log(chalk.red('Some error occurred - file either not saved or corrupted file saved.' + error)));;
 }
 
-generateContentList()
-// exports.generateContentList = generateContentList;
+// generateContentList()
+exports.generateContentList = generateContentList;
