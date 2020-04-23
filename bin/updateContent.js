@@ -35,6 +35,7 @@ function updateContentWithItemSet(contentIdentifier, itemSetIdentifier, contentS
                 log(err)
             })
 
+
     } else {
         getContentVersionKey('', contentIdentifier, itemSetIdentifier, contentStatus, versionKey);
 
@@ -52,14 +53,14 @@ function updateContentWithItemSet(contentIdentifier, itemSetIdentifier, contentS
     }
     const API_ENDPOINT =  constants.kp_content_service_base_path + "/content/v3/read"
     axios.get(`${API_ENDPOINT}/${contentIdentifier}`+ "?mode=edit", config).then(response => {
-        log("Content update call response ----------------- " + response.data)
+        log("Content get version key  response ----------------- " + response.data)
         log(JSON.stringify("version key was" + versionKey + "changed to " + response.data.result.content.versionKey))
         patchContentWithItemset(access_token, contentIdentifier, itemSetIdentifier, contentStatus, response.data.result.content.versionKey)
         // log("item read API is")
         
       })
       .catch((error) => {
-        log(chalk.red(JSON.stringify(error.response.data)))
+        log("Content get version key  response ----------------- " + chalk.red(JSON.stringify(error.response.data)))
       });
   }
 
