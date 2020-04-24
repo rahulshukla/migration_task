@@ -121,8 +121,7 @@ function patchQuestionForNewVersion (access_token,QumlData) {
         }
     }
     
-    // log(JSON.stringify(requestBody))
-    log("-----------------------------------------------")
+    
     // log('Request endpoint is' + constants.kp_learning_service_base_path.concat('/assessmentitem/v3/update') +" request body is " + JSON.stringify(requestBody) + 'with headers '+ JSON.stringify(config)) 
     axios.patch(constants.kp_learning_service_base_path.concat('/assessment/v3/items/update/').concat(QumlData.assessment_item.identifier) , requestBody, config).then((result) => {
         // log("assessment update response is"+ JSON.stringify(result.data))
