@@ -23,7 +23,7 @@ function getDataFromCSV() {
 
 function getQumlQuestions() {
   if(constants.access_token_required){
-    log(chalk.bold.yellow("Getting Access Token in createItemset"))
+    log(chalk.bold.yellow('\n'+"Getting Access Token in createItemset"+'\n'))
     const requestBody = {
         client_id: constants.clientId,
         username: constants.username,
@@ -39,7 +39,7 @@ function getQumlQuestions() {
       getQumlInBatch(result.data.access_token);
         })
         .catch((err) => {
-            log(err)
+          log(chalk.red(JSON.stringify(err.response.data)))
         })
 
   } else {
@@ -48,7 +48,7 @@ function getQumlQuestions() {
   
 }
 
-async function getQumlInBatch (access_token) {
+function getQumlInBatch (access_token) {
   var row =getDataFromCSV()
   var questionIdObjForItemset = []
   row.forEach(function (value) {
@@ -81,19 +81,19 @@ async function getQumlInBatch (access_token) {
         }
 
           const API_ENDPOINT =  constants.kp_assessment_service_base_path .concat("/itemset/v3/create")
-          //  log('Request endpoint is' + API_ENDPOINT +" request body is " + JSON.stringify(requestBody) + 'with headers '+ JSON.stringify(config)) 
+           log('Request endpoint is' + API_ENDPOINT +" request body is " + JSON.stringify(requestBody) + 'with headers '+ JSON.stringify(config)) 
           axios.post(API_ENDPOINT, requestBody, config).then((result) => {
-              log('Itemset successful with: ' + result)
+            log("\n"+"itemset response is"+ JSON.stringify(result.data.result)+"\n")
             updateContent.updateContentWithItemSet(value.identifier, result.data.result.identifier, value.status, value.versionKey )
             }).catch((err) => {
-                log('Itemset Failed with: ' + err)
+                log('Itemset Failed with: ' +chalk.red(JSON.stringify(error.response.data)))
                 failedItemSetToContentReport(value)
             })
    })
 
 }
 
-async function failedItemSetToContentReport(value) {
+function failedItemSetToContentReport(value) {
     const csvWriter = createCsvWriter({
         path: constants.failed_itemset_creation_result_csv_file_rath,
         append: true, // Below header will not get added if this property is true, just to make a blank template make it false 

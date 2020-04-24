@@ -60,18 +60,30 @@ async function getQumlInBatch (access_token) {
     }
   }
   const API_ENDPOINT =  constants.kp_learning_service_base_path .concat("/assessment/v3/items/read")
-  const request = (qumlId) => axios.get(`${API_ENDPOINT}/${qumlId}`, config).then(response => {
-    upgradeUtil.upgradeQumlQuestion(response.data.result)
-    // log("item read API is")
-    // log(JSON.stringify(response.data.result))
-  })
-  .catch((error) => {
-    log(error);
-  });
+  for(var i = 0 ; i < qumlIds.length ; i++){
+    // log(qumlIds[i])
+    axios.get(`${API_ENDPOINT}/${qumlIds[i]}`, config).then(response => {
+      upgradeUtil.upgradeQumlQuestion(response.data.result)
+    }).catch((error) => {
+      log(chalk.red(JSON.stringify(error.response.data)))
+    });
+  }
 
-  const {error, data } = await batchRequest(qumlIds, request, { batchSize: constants.batch_size, delay: constants.delay_between_request })
-  log(chalk.green(JSON.stringify(data))) 
-  log(chalk.red(error)) 
+  
+  
+  // const request = (qumlId) => axios.get(`${API_ENDPOINT}/${qumlId}`, config).then(response => {
+  //   // log("assessment read response is"+ JSON.stringify(response.data.params))
+  //   upgradeUtil.upgradeQumlQuestion(response.data.result)
+  //   // log("item read API is")
+    
+  // })
+  // .catch((error) => {
+  //   // log(chalk.red(JSON.stringify(error.response.data)))
+  // });
+
+  // const {error, data } = await batchRequest(qumlIds, request, { batchSize: constants.batch_size, delay: constants.delay_between_request })
+  // log(chalk.green(JSON.stringify(data))) 
+  // log(chalk.red(error)) 
 }
 
 // getQumlQuestions()

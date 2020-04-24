@@ -35,6 +35,7 @@ function updateContentWithItemSet(contentIdentifier, itemSetIdentifier, contentS
                 log(err)
             })
 
+
     } else {
         getContentVersionKey('', contentIdentifier, itemSetIdentifier, contentStatus, versionKey);
 
@@ -52,12 +53,14 @@ function updateContentWithItemSet(contentIdentifier, itemSetIdentifier, contentS
     }
     const API_ENDPOINT =  constants.kp_content_service_base_path + "/content/v3/read"
     axios.get(`${API_ENDPOINT}/${contentIdentifier}`+ "?mode=edit", config).then(response => {
+        // log("Content get version key  response ----------------- " + response.data.result.params)
+        // log(JSON.stringify("version key was" + versionKey + "changed to " + response.data.result.content.versionKey))
         patchContentWithItemset(access_token, contentIdentifier, itemSetIdentifier, contentStatus, response.data.result.content.versionKey)
         // log("item read API is")
-        log(JSON.stringify("version key was" + versionKey + "changed to " + response.data.result.content.versionKey))
+        
       })
       .catch((error) => {
-        log(error);
+        log("Content get version key  response ----------------- " + chalk.red(JSON.stringify(error.response.data)))
       });
   }
 
@@ -78,8 +81,7 @@ function updateContentWithItemSet(contentIdentifier, itemSetIdentifier, contentS
     const requestBody = {
         "request": {
           "content": {
-            "itemSets": [
-              {
+            "itemSets": [{
                 "identifier": itemSetIdentifier
               }
             ],
@@ -93,9 +95,8 @@ function updateContentWithItemSet(contentIdentifier, itemSetIdentifier, contentS
     
     axios.patch(constants.kp_content_service_base_path.concat('/content/v3/update/').concat(contentIdentifier) , requestBody, config)
     .then( (response) => {
-        log("Content update call response ----------------- " + response.data)
+        log("Content update call response ----------------- " + JSON.stringify(response.data.params))
         if( (_.lowerCase(contentStatus)) === 'live' ) {
-            log("Content update with item set " + result)
             contentPublish(access_token, contentIdentifier, itemSetIdentifier, contentStatus, versionKey)
         }
     })
@@ -107,6 +108,11 @@ function updateContentWithItemSet(contentIdentifier, itemSetIdentifier, contentS
   }
 
   function contentPublish(access_token, contentIdentifier, itemSetIdentifier, contentStatus, versionKey ) {
+      log("in publish with ")
+      log("content id = " + contentIdentifier)
+      log("itemsetId id = " + itemSetIdentifier)
+      log("contentStatus id = " + contentStatus)
+      log("versionKey id = " + versionKey)
     const config = {
         headers: {
             'Content-Type': 'application/json',
@@ -122,14 +128,13 @@ function updateContentWithItemSet(contentIdentifier, itemSetIdentifier, contentS
           }
         }
       }
-
-      axios.patch(constants.kp_learning_service_base_path.concat('/content/v3/publish/').concat(contentIdentifier) , requestBody, config).then((result) => {
-        log("Content publish" + result)
+      log('PUBLISH Request endpoint is' + constants.kp_content_service_base_path.concat('/content/v3/publish/').concat(contentIdentifier) +" request body is " + JSON.stringify(requestBody) + 'with headers '+ JSON.stringify(config)) 
+      axios.post(constants.kp_learning_service_base_path.concat('/content/v3/publish/').concat(contentIdentifier) , requestBody, config).then((result) => {
+        log("Content publish" + JSON.stringify(result.data.params))
         updatePublishReport(contentIdentifier, itemSetIdentifier, contentStatus, versionKey,'published')
     })
     .catch((err) => {
         updatePublishReport(contentIdentifier, itemSetIdentifier, contentStatus, versionKey,'failed')
-        log(chalk.red(err))
         log(chalk.red(JSON.stringify(err.response.data)))
     })
   }

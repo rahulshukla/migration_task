@@ -35,21 +35,19 @@ node() {
 
             }
             stage('Run Migration Script') {
-                println(ANSI_BOLD + ANSI_YELLOW +"Executing Migration inside Docker container")
                 sh """
                     docker stop --force migration_container || true && docker rm --force migration_container || true
                     docker run --name migration_container -d -w /migration_task -e kp_search_service_base_path=$params.kp_search_service_base_path -e kp_learning_service_base_path=$params.kp_learning_service_base_path  -e kp_assessment_service_base_path=$params.kp_assessment_service_base_path  -e kp_content_service_base_path=$params.kp_content_service_base_path  node sleep infinity
                     id=\$(docker ps -aqf "name=migration_container")
                     docker cp migration_task/  \${id}:.
                     docker exec \${id} npm install /migration_task
-                    docker exec \${id} npm run migration /migration_task
+                    docker exec \${id} npm run migrate /migration_task
                     mkdir -p migration_task/generatedReports
                     docker cp \${id}:/migration_task/reports/  migration_task/generatedReports/
                     docker rm --force \${id}
                 """
             }
             stage('Generate Reports') {
-                println(ANSI_BOLD + ANSI_YELLOW +"Generating artifects")
                 sh """
                     zip -j  reports-artifacts_${artifact_version}.zip  migration_task/generatedReports/reports/*
                 """

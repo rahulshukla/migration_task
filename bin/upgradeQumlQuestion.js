@@ -122,16 +122,18 @@ function patchQuestionForNewVersion (access_token,QumlData) {
     }
     
     // log(JSON.stringify(requestBody))
-    // log("-----------------------------------------------")
-
-    axios.patch(constants.kp_learning_service_base_path.concat('/assessment/v3/items/update').concat(QumlData.assessment_item.identifier) , requestBody, config).then((result) => {
+    log("-----------------------------------------------")
+    // log('Request endpoint is' + constants.kp_learning_service_base_path.concat('/assessmentitem/v3/update') +" request body is " + JSON.stringify(requestBody) + 'with headers '+ JSON.stringify(config)) 
+    axios.patch(constants.kp_learning_service_base_path.concat('/assessment/v3/items/update/').concat(QumlData.assessment_item.identifier) , requestBody, config).then((result) => {
+        // log("assessment update response is"+ JSON.stringify(result.data))
         updateReport(QumlData,'upgraded')
         // console.log(result)
         // log(QumlData)
     })
     .catch((err) => {
+        // log("assessment failed update response is" + chalk.red(JSON.stringify(err.response.data)))
         updateReport(QumlData,'failed')
-        log(chalk.red(err))
+        
     })
 
 }
