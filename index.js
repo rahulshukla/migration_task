@@ -11,7 +11,7 @@ switch(args.x) {
     case 'get': // Get content details
         console.log("\u001B[1m" + "\u001B[32m" +"Generating CSV for old QUML content" + "\u001B[0m")
         // to generate the list of content which doesn't have itemset attached
-        // generateList.generateContentList();
+        generateList.generateContentList();
       break;
     case 'update': // update content details
         console.log("\u001B[1m" + "\u001B[32m" +"Updating old QUML content to New QUML content" + "\u001B[0m")
