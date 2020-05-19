@@ -8,7 +8,7 @@ module.exports = {
      *
      * @const {string}
      */
-    authEndpointUrl: 'https://dev.sunbirded.org/auth/realms/sunbird/protocol/openid-connect/token',
+    authEndpointUrl: '',
     /**
      * The const of API end point URL
      *
@@ -31,28 +31,28 @@ module.exports = {
      *
      * @const {string}
      */
-    clientId: 'admin-cli',
+    clientId: '',
 
     /**
      * The const of username
      *
      * @const {string}
      */
-    username: 'ntptest103',
+    username: '',
 
     /**
      * The const of Password.
      *
      * @const {string}
      */
-    password: 'passowrd',
+    password: '',
 
     /**
      * The const of grant type.
      *
      * @const {string}
      */
-    grant_type: 'password',
+    grant_type: '',
 
     /**
      * The input csv file path
