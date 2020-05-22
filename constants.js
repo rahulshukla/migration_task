@@ -78,6 +78,8 @@ module.exports = {
     failed_itemset_to_content_result_csv_file_rath: path.join(__dirname, 'reports', 'failed_itemset_to_content.csv'),
 
     ECML_content_identifier_path: path.join(__dirname, 'reports', 'ECMLContents.csv'),
+    
+    content_csv_folder_rath: path.join(__dirname, 'reports', 'inputContentList'),
     /**
      * batch size for API request , it executes no of API request concurrently
      *
