@@ -97,9 +97,9 @@ function getQumlInBatch (access_token,fromPath) {
 function itemSetCreationReport(value,apiStatus,repStatus) {
     const reportPath = constants.itemset_creation_result_csv_file_rath
     if(repStatus == "passed"){
-      const apiStatus = JSON.stringify(apiStatus)
+         apiStatus = JSON.stringify(apiStatus)
     } else {
-      const apiStatus = JSON.stringify(apiStatus)
+         apiStatus = JSON.stringify(apiStatus)
     }
     const csvWriter = createCsvWriter({
         path: reportPath,
