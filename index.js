@@ -22,18 +22,18 @@ function batchProcess() {
                 const fromPath = path.join(constants.content_csv_folder_rath, file);
                 const stat = await fs.stat(fromPath);
                 if (stat.isFile()){
-                    console.log("'%s' is a file.", fromPath);
+                    // console.log("'%s' is a file.", fromPath);
                     if(path.extname(fromPath) == ".csv"){
                         await startMigration(fromPath)
                     }
                 }
                 else if (stat.isDirectory()){
-                    console.log("'%s' is a directory.", fromPath);
+                    // console.log("'%s' is a directory.", fromPath);
                 }
                 
             }
         } catch (e) {
-            console.error("We've thrown! Whoops!", e);
+            console.error("error on reading folder!", e);
         }
     })();
 }
