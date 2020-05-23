@@ -80,19 +80,12 @@ function getQumlInBatch (access_token,fromPath) {
             }
         }
 
-          const API_ENDPOINT =  constants.kp_assessment_service_base_path .concat("/itemset/v3/create")
-          axios.post(API_ENDPOINT, requestBody, config).then((result) => {
-            let ts = Date.now();
-            console.log(ts);
-            log('Itemset passed with: ' +chalk.red(JSON.stringify(requestBody)))
-            itemSetCreationReport(value,result,"passed")
-            updateContent.updateContentWithItemSet(value.identifier, result.data.result.identifier, value.status, value.versionKey )
-            }).catch( (err) => {
-              let ts = Date.now();
-              console.log(ts);
-                log('Itemset Failed with: ' +chalk.red(JSON.stringify(requestBody)))
-                itemSetCreationReport(value,err,"failed")
-            })  
+      const API_ENDPOINT =  constants.kp_assessment_service_base_path .concat("/itemset/v3/create")
+      axios.post(API_ENDPOINT, requestBody, config).then(response => {
+        updateContent.updateContentWithItemSet(value.identifier, response.data.result.identifier, value.status, value.versionKey )
+        }).catch( (err) => {
+            itemSetCreationReport(value,err.response.data,"failed")
+        });
    })
 
 }
@@ -123,7 +116,7 @@ function itemSetCreationReport(value,apiStatus,repStatus) {
     csvWriter.writeRecords(resultData)       // returns a promise
     .then(() => {
         log(chalk.bold.green(repStatus +' Itemset creation Report generated for ' ));
-    });
+    }).catch((err) => { console.log(err)});
 }
 
 // getQumlQuestions()
