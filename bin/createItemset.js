@@ -87,8 +87,8 @@ function getQumlInBatch (access_token,fromPath) {
             itemSetCreationReport(value,result,"passed")
             updateContent.updateContentWithItemSet(value.identifier, result.data.result.identifier, value.status, value.versionKey )
             }).catch((err) => {
-                log('Itemset Failed with: ' +chalk.red(JSON.stringify(err.response.data)))
-                itemSetCreationReport(value,error,"failed")
+                log('Itemset Failed with: ' +chalk.red(JSON.stringify(err)))
+                itemSetCreationReport(value,err,"failed")
             })  
    })
 
@@ -97,9 +97,9 @@ function getQumlInBatch (access_token,fromPath) {
 function itemSetCreationReport(value,apiStatus,repStatus) {
     const reportPath = constants.itemset_creation_result_csv_file_rath
     if(repStatus == "passed"){
-      const apiStatus = JSON.stringify(apiStatus.data.result)
+      const apiStatus = JSON.stringify(apiStatus)
     } else {
-      const apiStatus = JSON.stringify(apiStatus.response.data)
+      const apiStatus = JSON.stringify(apiStatus)
     }
     const csvWriter = createCsvWriter({
         path: reportPath,
