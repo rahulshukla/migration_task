@@ -86,8 +86,8 @@ function getQumlInBatch (access_token,fromPath) {
             log("\n"+"itemset response is"+ JSON.stringify(result.data.result)+"\n")
             itemSetCreationReport(value,result,"passed")
             updateContent.updateContentWithItemSet(value.identifier, result.data.result.identifier, value.status, value.versionKey )
-            }).catch((err) => {
-                log('Itemset Failed with: ' +chalk.red(JSON.stringify(err)))
+            }).catch( (err) => {
+                log('Itemset Failed with: ' +chalk.red(JSON.stringify(err.response)))
                 itemSetCreationReport(value,err,"failed")
             })  
    })
