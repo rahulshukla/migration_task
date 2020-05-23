@@ -10,7 +10,7 @@ const batchRequest = require('batch-request-js')
 , csvsync = require('csvsync')
 , _ = require('lodash')
 , upgradeUtil  = require(path.join(__dirname,  'upgradeQumlQuestion'))
-
+axios.defaults.timeout = 180000;
 function getDataFromCSV(fromPath) {
     var csv = fs.readFileSync(fromPath);
     var data = csvsync.parse(csv,{skipHeader: false,

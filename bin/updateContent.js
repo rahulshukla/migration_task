@@ -10,7 +10,7 @@ const batchRequest = require('batch-request-js')
 , csvsync = require('csvsync')
 , _ = require('lodash')
 , createCsvWriter = require('csv-writer').createObjectCsvWriter;
-
+axios.defaults.timeout = 180000;
 /**
  * 
  */

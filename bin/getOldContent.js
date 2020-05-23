@@ -15,7 +15,7 @@ const path = require('path')
 , csvSplitStream = require('csv-split-stream')
 , fsExtra = require('fs-extra');
 
-
+axios.defaults.timeout = 180000;
 
 perf.start(); // Just to measure the script performance
 

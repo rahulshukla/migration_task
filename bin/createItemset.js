@@ -12,6 +12,7 @@ const batchRequest = require('batch-request-js')
 , { v4: uuidv4 } = require('uuid')
 , updateContent  = require(path.join(__dirname,  'updateContent'))
 , createCsvWriter = require('csv-writer').createObjectCsvWriter;
+axios.defaults.timeout = 180000;
 
 function getDataFromCSV(fromPath) {
     var csv = fs.readFileSync(fromPath);
