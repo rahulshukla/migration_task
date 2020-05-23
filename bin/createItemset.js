@@ -116,7 +116,7 @@ function itemSetCreationReport(value,apiStatus,repStatus) {
     }]
     csvWriter.writeRecords(resultData)       // returns a promise
     .then(() => {
-        log(chalk.bold.green(repStatus +' Itemset creation Report generated for ' ));
+        log(chalk.bold.green(' Itemset creation Report generated for '+ apiStatus ));
     }).catch((err) => { console.log(err)});
 }
 
