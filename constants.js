@@ -8,7 +8,7 @@ module.exports = {
      *
      * @const {string}
      */
-    authEndpointUrl: 'https://dev.sunbirded.org/auth/realms/sunbird/protocol/openid-connect/token',
+    authEndpointUrl: '',
     /**
      * The const of API end point URL
      *
@@ -31,28 +31,28 @@ module.exports = {
      *
      * @const {string}
      */
-    clientId: 'admin-cli',
+    clientId: '',
 
     /**
      * The const of username
      *
      * @const {string}
      */
-    username: 'ntptest103',
+    username: '',
 
     /**
      * The const of Password.
      *
      * @const {string}
      */
-    password: 'passowrd',
+    password: '',
 
     /**
      * The const of grant type.
      *
      * @const {string}
      */
-    grant_type: 'password',
+    grant_type: '',
 
     /**
      * The input csv file path
@@ -76,8 +76,11 @@ module.exports = {
     publish_result_csv_file_rath: path.join(__dirname, 'reports', 'publish_content.csv'),
 
     failed_itemset_to_content_result_csv_file_rath: path.join(__dirname, 'reports', 'failed_itemset_to_content.csv'),
-
+    passed_itemset_to_content_result_csv_file_rath: path.join(__dirname, 'reports', 'passed_itemset_to_content.csv'),
+    itemset_creation_result_csv_file_rath : path.join(__dirname, 'reports', 'itemset_creation.csv'),
     ECML_content_identifier_path: path.join(__dirname, 'reports', 'ECMLContents.csv'),
+    
+    content_csv_folder_rath: path.join(__dirname, 'reports', 'inputContentList'),
     /**
      * batch size for API request , it executes no of API request concurrently
      *
