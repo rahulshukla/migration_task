@@ -81,13 +81,17 @@ function getQumlInBatch (access_token,fromPath) {
         }
 
           const API_ENDPOINT =  constants.kp_assessment_service_base_path .concat("/itemset/v3/create")
-           log('Request endpoint is' + API_ENDPOINT +" request body is " + JSON.stringify(requestBody) + 'with headers '+ JSON.stringify(config)) 
+           
+          
           axios.post(API_ENDPOINT, requestBody, config).then((result) => {
-            log("\n"+"itemset response is"+ JSON.stringify(result.data.result)+"\n")
+            let ts = Date.now();
+            console.log(ts);
             itemSetCreationReport(value,result,"passed")
             updateContent.updateContentWithItemSet(value.identifier, result.data.result.identifier, value.status, value.versionKey )
             }).catch( (err) => {
-                log('Itemset Failed with: ' +chalk.red(JSON.stringify(err.response)))
+              let ts = Date.now();
+              console.log(ts);
+                log('Itemset Failed with: ' +chalk.red(JSON.stringify(requestBody)))
                 itemSetCreationReport(value,err,"failed")
             })  
    })
@@ -119,7 +123,7 @@ function itemSetCreationReport(value,apiStatus,repStatus) {
     }]
     csvWriter.writeRecords(resultData)       // returns a promise
     .then(() => {
-        log(chalk.bold.green('Itemset creation Report generated for ' .concat(value.contentIdentifier)));
+        log(chalk.bold.green(repStatus +' Itemset creation Report generated for ' ));
     });
 }
 
